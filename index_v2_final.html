@@ -932,7 +932,230 @@ tbody tr:last-child td { border-bottom: none; }
   .peptide-card-footer { justify-content: stretch; }
   .peptide-card-footer .btn { flex: 1; justify-content: center; }
 }
+
+/* === FEATURE ADD-ONS === */
+/* ============================================================
+   FEATURE ADD-ON STYLES
+   Appended to base styles.css in the final bundle
+   ============================================================ */
+
+/* ── Profile Gate ────────────────────────────────────────── */
+.profile-gate {
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg);
+  padding: var(--space-6);
+}
+.profile-gate-inner {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+}
+.profile-gate-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-2);
+}
+.profile-gate-title {
+  font-family: var(--font-display, var(--font-body));
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-text);
+}
+.profile-gate-sub {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-top: calc(-1 * var(--space-3));
+}
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: var(--space-3);
+  width: 100%;
+}
+.profile-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  cursor: pointer;
+  transition: box-shadow var(--transition-interactive),
+              transform var(--transition-interactive),
+              border-color var(--transition-interactive);
+}
+.profile-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.profile-card:active { transform: translateY(0); }
+.profile-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-lg);
+  font-weight: 700;
+  font-family: var(--font-body);
+}
+.profile-avatar-lg {
+  width: 72px;
+  height: 72px;
+  font-size: var(--text-xl);
+  margin-bottom: var(--space-1);
+}
+.profile-name {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+.profile-lock {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+/* ── PIN Entry ───────────────────────────────────────────── */
+.pin-entry {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+.pin-profile-name {
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--color-text);
+}
+.pin-label {
+  font-size: var(--text-sm);
+  color: var(--color-text-muted);
+}
+.pin-dots {
+  display: flex;
+  gap: var(--space-4);
+  margin: var(--space-2) 0;
+}
+.pin-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  background: transparent;
+  transition: background var(--transition-interactive),
+              border-color var(--transition-interactive);
+}
+.pin-dot.filled {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.pin-dot.error {
+  background: var(--color-error);
+  border-color: var(--color-error);
+  animation: shake 0.3s ease;
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25%      { transform: translateX(-6px); }
+  75%      { transform: translateX(6px); }
+}
+.pin-hidden-input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+.pin-error {
+  font-size: var(--text-sm);
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+/* ── Profile switcher in sidebar footer ──────────────────── */
+.sidebar-profile {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  margin-bottom: var(--space-2);
+  background: var(--color-surface-offset);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: background var(--transition-interactive);
+}
+.sidebar-profile:hover { background: var(--color-surface-dynamic); }
+.sidebar-profile-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  color: white;
+  font-size: var(--text-xs);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.sidebar-profile-name {
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sidebar-profile-switch {
+  font-size: var(--text-xs);
+  color: var(--color-text-faint);
+}
+
+/* ── Cycle badge extras ──────────────────────────────────── */
+.badge-green {
+  background: var(--color-success-highlight);
+  color: var(--color-success);
+}
+.badge-yellow {
+  background: var(--color-gold-highlight);
+  color: var(--color-gold);
+}
+[data-theme="dark"] .badge-green { background: rgba(109,170,69,0.18); color: var(--color-success); }
+[data-theme="dark"] .badge-yellow { background: rgba(232,175,52,0.18); color: var(--color-gold); }
+
+/* ── Calc page mono values ───────────────────────────────── */
+.mono { font-family: var(--font-mono, 'JetBrains Mono', monospace); }
+
+/* ── Chart canvas container ──────────────────────────────── */
+.chart-wrap {
+  position: relative;
+  height: 300px;
+  width: 100%;
+}
+
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 </head>
 <body>
   <a href="#main-content" class="sr-only">Skip to main content</a>
@@ -942,13 +1165,19 @@ tbody tr:last-child td { border-bottom: none; }
   <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
   <script>
-    /* Set your deployed Apps Script URL here, or via the Settings page */
+    /* Profile definitions — PINs are djb2 hashes */
+    window.PT_PROFILES = [
+      { name: "Shubh", sheetSuffix: "_Shubh", pin: "2088329808" },
+      { name: "Henry", sheetSuffix: "_Henry", pin: "2088324367" }
+    ];
+  </script>
+
+  <script>
     window.PT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbYbNPvm1QoM5i_cU_2yqBc-s197o1RzqPOGcXXN_OAWgPq4xTSsX-y8n-ddKdgDti/exec";
   </script>
 
   <script>
 
-/* ---- utils.js ---- */
 /* ---- utils.js ---- */
 /* ============================================================
    PEPTIDE TRACKER — Utility Functions
@@ -1627,9 +1856,24 @@ tbody tr:last-child td { border-bottom: none; }
       /* Footer */
       React.createElement(
         "div", { className: "sidebar-footer" },
-        "PeptideTrack v2.0",
-        React.createElement("br"),
-        "Google Sheets backend"
+        /* Profile switcher — shown when multiple profiles exist */
+        props.profile && props.onSwitchProfile && React.createElement(
+          "button", {
+            className: "sidebar-profile",
+            onClick: props.onSwitchProfile,
+            title: "Switch profile"
+          },
+          React.createElement("div", { className: "sidebar-profile-avatar" },
+            props.profile.name.slice(0,2).toUpperCase()),
+          React.createElement("span", { className: "sidebar-profile-name" },
+            props.profile.name),
+          React.createElement("span", { className: "sidebar-profile-switch" }, "switch")
+        ),
+        React.createElement("div", null,
+          "PeptideTrack v2.0",
+          React.createElement("br"),
+          "Google Sheets backend"
+        )
       )
     );
   }
@@ -3350,12 +3594,963 @@ tbody tr:last-child td { border-bottom: none; }
 /* ---- App.js ---- */
 /* ============================================================
    PEPTIDE TRACKER — Root App + index.html entry point
-   Exposes: window.PT_APP (for debugging)
-   Deps: ALL prior files
-   ============================================================ */
 
+/* ==== FEATURE: Reconstitution Calculator ==== */
+/* ============================================================
+   FEATURE: Reconstitution Calculator Page
+   window.PT_Pages.CalcPage
+   ============================================================ */
+(function() {
+  var useState = React.useState;
+  var Icon = window.PT_Icons.Icon;
+
+  /* Syringe unit markings for U-100 insulin syringe */
+  var SYRINGE_SIZES = [
+    { label: "31u (0.31mL)", max: 31 },
+    { label: "50u (0.50mL)", max: 50 },
+    { label: "100u (1.00mL)", max: 100 },
+  ];
+
+  function ResultRow(props) {
+    return React.createElement(
+      "div", { className: "peptide-stat-row" },
+      React.createElement("span", { className: "peptide-stat-label" }, props.label),
+      React.createElement("span", {
+        className: "peptide-stat-value mono",
+        style: props.highlight
+          ? { color: "var(--color-primary)", fontWeight: 700, fontSize: "var(--text-lg)" }
+          : {}
+      }, props.value)
+    );
+  }
+
+  function CalcPage(props) {
+    var vialMgS    = useState("5");
+    var vialMg     = vialMgS[0];    var setVialMg    = vialMgS[1];
+    var bacMlS     = useState("2");
+    var bacMl      = bacMlS[0];     var setBacMl     = bacMlS[1];
+    var doseMcgS   = useState("250");
+    var doseMcg    = doseMcgS[0];   var setDoseMcg   = doseMcgS[1];
+    var unitModeS  = useState("mcg");
+    var unitMode   = unitModeS[0];  var setUnitMode  = unitModeS[1];
+
+    /* Core math */
+    var vialNum  = parseFloat(vialMg)  || 0;
+    var bacNum   = parseFloat(bacMl)   || 0;
+    var doseNum  = parseFloat(doseMcg) || 0;
+
+    var concMgMl   = bacNum > 0 ? vialNum / bacNum : 0;          /* mg/mL */
+    var concMcgMl  = concMgMl * 1000;                            /* mcg/mL */
+
+    /* dose in mg for calc */
+    var doseMgCalc = unitMode === "mcg" ? doseNum / 1000 : doseNum;
+    var doseVolMl  = concMgMl > 0 ? doseMgCalc / concMgMl : 0;  /* mL needed */
+    var doseUnits  = doseVolMl * 100;                            /* U-100 units */
+
+    var totalDoses = doseMgCalc > 0 ? Math.floor(vialNum / doseMgCalc) : 0;
+
+    var valid = vialNum > 0 && bacNum > 0 && doseNum > 0;
+
+    /* Syringe guide */
+    function syringeGuide(max) {
+      if (!valid) return "—";
+      if (doseUnits > max) return "Too large for this syringe";
+      return doseUnits.toFixed(1) + " units  (" + (doseVolMl * 1000).toFixed(1) + " µL)";
+    }
+
+    return React.createElement(
+      "div", { className: "page-content" },
+      React.createElement("h2", { className: "section-title" }, "Reconstitution Calculator"),
+      React.createElement("p", {
+        style: { fontSize: "var(--text-sm)", color: "var(--color-text-muted)",
+                 marginBottom: "var(--space-6)" }
+      }, "Calculate concentration, injection volume, and syringe units for any peptide vial."),
+
+      React.createElement(
+        "div", { style: { display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--space-6)",
+                          maxWidth: 760 } },
+
+        /* ── Inputs ── */
+        React.createElement(
+          "div", { className: "settings-card" },
+          React.createElement("h3", { className: "settings-card-title" },
+            React.createElement(Icon, { name: "flask", size: 15 }), " Vial Info"
+          ),
+          React.createElement("div", { className: "form-group" },
+            React.createElement("label", { className: "form-label", htmlFor: "rc-vial" },
+              "Vial size (mg)"),
+            React.createElement("input", {
+              id: "rc-vial", className: "form-input", type: "number",
+              min: "0", step: "0.1", value: vialMg,
+              onChange: function(e) { setVialMg(e.target.value); }
+            })
+          ),
+          React.createElement("div", { className: "form-group" },
+            React.createElement("label", { className: "form-label", htmlFor: "rc-bac" },
+              "BAC water added (mL)"),
+            React.createElement("input", {
+              id: "rc-bac", className: "form-input", type: "number",
+              min: "0", step: "0.1", value: bacMl,
+              onChange: function(e) { setBacMl(e.target.value); }
+            })
+          ),
+          React.createElement(
+            "div", { className: "form-group" },
+            React.createElement("label", { className: "form-label", htmlFor: "rc-dose" },
+              "Desired dose"),
+            React.createElement(
+              "div", { style: { display: "flex", gap: "var(--space-2)" } },
+              React.createElement("input", {
+                id: "rc-dose", className: "form-input", type: "number",
+                min: "0", step: "1", value: doseMcg, style: { flex: 1 },
+                onChange: function(e) { setDoseMcg(e.target.value); }
+              }),
+              React.createElement(
+                "select", {
+                  className: "form-input", style: { width: "auto" },
+                  value: unitMode,
+                  onChange: function(e) { setUnitMode(e.target.value); }
+                },
+                React.createElement("option", { value: "mcg" }, "mcg"),
+                React.createElement("option", { value: "mg" }, "mg")
+              )
+            )
+          )
+        ),
+
+        /* ── Results ── */
+        React.createElement(
+          "div", { className: "settings-card" },
+          React.createElement("h3", { className: "settings-card-title" },
+            React.createElement(Icon, { name: "droplet", size: 15 }), " Results"
+          ),
+          React.createElement(ResultRow, {
+            label: "Concentration",
+            value: valid ? concMgMl.toFixed(2) + " mg/mL  (" + concMcgMl.toFixed(0) + " mcg/mL)" : "—"
+          }),
+          React.createElement(ResultRow, {
+            label: "Volume per dose",
+            value: valid ? doseVolMl.toFixed(3) + " mL  (" + (doseVolMl * 1000).toFixed(1) + " µL)" : "—"
+          }),
+          React.createElement(ResultRow, {
+            label: "Syringe units (U-100)",
+            value: valid ? doseUnits.toFixed(1) + " units" : "—",
+            highlight: valid
+          }),
+          React.createElement(ResultRow, {
+            label: "Total doses per vial",
+            value: valid ? totalDoses + " doses" : "—"
+          }),
+          React.createElement("div", { className: "separator" }),
+          React.createElement("div", {
+            style: { fontSize: "var(--text-xs)", color: "var(--color-text-muted)",
+                     fontWeight: 700, marginBottom: "var(--space-2)" }
+          }, "Syringe size guide"),
+          SYRINGE_SIZES.map(function(s) {
+            return React.createElement(ResultRow, {
+              key: s.label,
+              label: s.label,
+              value: syringeGuide(s.max)
+            });
+          })
+        )
+      ),
+
+      /* Disclaimer */
+      React.createElement(
+        "div", {
+          style: { marginTop: "var(--space-6)", maxWidth: 760,
+                   background: "var(--color-surface-2)",
+                   border: "1px solid var(--color-border)",
+                   borderRadius: "var(--radius-lg)",
+                   padding: "var(--space-3) var(--space-4)",
+                   fontSize: "var(--text-xs)", color: "var(--color-text-faint)",
+                   lineHeight: 1.6 }
+        },
+        React.createElement("strong", null, "Note: "),
+        "This calculator is for reference only. Always verify calculations independently. " +
+        "Use sterile technique and proper storage for all reconstituted peptides."
+      )
+    );
+  }
+
+  if (!window.PT_Pages) window.PT_Pages = {};
+  window.PT_Pages.CalcPage = CalcPage;
+})();
+
+
+/* ==== FEATURE: Cycle Tracking ==== */
+/* ============================================================
+   FEATURE: Cycle Tracking helpers + CyclePage
+   Adds cycleOnDays, cycleOffDays, cycleStartDate to peptides.
+   Updates SchedulePage to respect off-days.
+   window.PT_Pages.CyclePage
+   window.PT_CYCLES (utility functions)
+   ============================================================ */
 (function() {
   var useState  = React.useState;
+  var useEffect = React.useEffect;
+  var Icon      = window.PT_Icons.Icon;
+  var U         = window.PT_UTILS;
+  var API       = window.PT_API;
+
+  /* ── Cycle math ──────────────────────────────────────────── */
+  function cycleStatus(peptide) {
+    /* Returns { phase:"on"|"off"|"none", dayInPhase, daysLeft, label } */
+    if (!peptide.cycleOnDays || !peptide.cycleOffDays || !peptide.cycleStartDate) {
+      return { phase: "none", label: "No cycle set" };
+    }
+    var on    = parseInt(peptide.cycleOnDays);
+    var off   = parseInt(peptide.cycleOffDays);
+    var total = on + off;
+    if (total <= 0) return { phase: "none", label: "No cycle set" };
+
+    var start   = new Date(peptide.cycleStartDate);
+    start.setHours(0,0,0,0);
+    var today   = new Date(); today.setHours(0,0,0,0);
+    var elapsed = Math.max(0, Math.floor((today - start) / 86400000));
+    var pos     = elapsed % total;           /* position within current cycle */
+
+    if (pos < on) {
+      return {
+        phase:      "on",
+        dayInPhase: pos + 1,
+        totalPhase: on,
+        daysLeft:   on - pos,
+        label:      "Day " + (pos + 1) + " of " + on + " ON"
+      };
+    } else {
+      var offPos = pos - on;
+      return {
+        phase:      "off",
+        dayInPhase: offPos + 1,
+        totalPhase: off,
+        daysLeft:   off - offPos,
+        label:      "Rest — " + (off - offPos) + "d left"
+      };
+    }
+  }
+
+  /* Returns true if peptide is in an "off" phase today */
+  function isOffDay(peptide) {
+    return cycleStatus(peptide).phase === "off";
+  }
+
+  window.PT_CYCLES = { cycleStatus: cycleStatus, isOffDay: isOffDay };
+
+  /* ── Cycle badge on cards ────────────────────────────────── */
+  function CycleBadge(props) {
+    var cs = cycleStatus(props.peptide);
+    if (cs.phase === "none") return null;
+    var cls = cs.phase === "on" ? "badge badge-green" : "badge badge-yellow";
+    return React.createElement("span", { className: cls, style: { marginLeft: "var(--space-1)" } },
+      cs.label);
+  }
+
+  window.PT_CYCLES.CycleBadge = CycleBadge;
+
+  /* ── CyclePage ───────────────────────────────────────────── */
+  function CyclePage(props) {
+    var addToast   = props.addToast;
+    var pepState   = useState([]);
+    var peptides   = pepState[0]; var setPeptides = pepState[1];
+    var loadState  = useState(true);
+    var loading    = loadState[0]; var setLoading  = loadState[1];
+    var editState  = useState(null);   /* peptide being edited */
+    var editing    = editState[0]; var setEditing  = editState[1];
+    var savingState = useState(false);
+    var saving      = savingState[0]; var setSaving = savingState[1];
+
+    /* Edit form state */
+    var formState  = useState({ cycleOnDays: "", cycleOffDays: "", cycleStartDate: "" });
+    var form       = formState[0]; var setForm = formState[1];
+
+    function fetchPeptides() {
+      setLoading(true);
+      API.getPeptides()
+        .then(function(d) { setPeptides(d.peptides || []); setLoading(false); })
+        .catch(function(e) { addToast(e.message, "error"); setLoading(false); });
+    }
+    useEffect(function() { fetchPeptides(); }, []);
+
+    function openEdit(p) {
+      setEditing(p);
+      setForm({
+        cycleOnDays:    String(p.cycleOnDays  || ""),
+        cycleOffDays:   String(p.cycleOffDays || ""),
+        cycleStartDate: p.cycleStartDate ? U.isoToDateInput(p.cycleStartDate) : U.todayInputValue(),
+      });
+    }
+
+    function handleSave() {
+      if (!form.cycleOnDays || !form.cycleOffDays) {
+        addToast("Enter both ON and OFF days", "error"); return;
+      }
+      setSaving(true);
+      var startISO = "";
+      if (form.cycleStartDate) {
+        var parts = form.cycleStartDate.split("-");
+        startISO = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]), 12).toISOString();
+      }
+      API.updatePeptide({
+        id:             editing.id,
+        cycleOnDays:    form.cycleOnDays,
+        cycleOffDays:   form.cycleOffDays,
+        cycleStartDate: startISO,
+      })
+        .then(function() {
+          addToast(editing.name + " cycle saved", "success");
+          setEditing(null); setSaving(false);
+          fetchPeptides();
+        })
+        .catch(function(e) { addToast(e.message, "error"); setSaving(false); });
+    }
+
+    function handleClear(p) {
+      API.updatePeptide({ id: p.id, cycleOnDays: "", cycleOffDays: "", cycleStartDate: "" })
+        .then(function() { addToast(p.name + " cycle cleared", "success"); fetchPeptides(); })
+        .catch(function(e) { addToast(e.message, "error"); });
+    }
+
+    return React.createElement(
+      "div", { className: "page-content" },
+      React.createElement("h2", { className: "section-title" }, "Cycle Tracking"),
+      React.createElement("p", {
+        style: { fontSize: "var(--text-sm)", color: "var(--color-text-muted)",
+                 marginBottom: "var(--space-6)" }
+      }, "Set ON/OFF cycles per peptide. The schedule page will automatically skip off-days."),
+
+      loading
+        ? React.createElement("div", { className: "peptide-grid" },
+            [1,2,3].map(function(i) {
+              return React.createElement("div", { key: i, className: "peptide-card" },
+                React.createElement("div", { className: "skeleton",
+                  style: { height: 80, borderRadius: "var(--radius-lg)" } }));
+            }))
+        : React.createElement("div", { className: "peptide-grid" },
+            peptides.map(function(p) {
+              var cs  = cycleStatus(p);
+              var isOn  = cs.phase === "on";
+              var isOff = cs.phase === "off";
+              return React.createElement(
+                "div", { key: p.id, className: "peptide-card" },
+                /* Header */
+                React.createElement("div", { className: "peptide-card-header" },
+                  React.createElement("div", { className: "peptide-card-name" }, p.name),
+                  cs.phase !== "none"
+                    ? React.createElement("span", {
+                        className: "badge " + (isOn ? "badge-green" : "badge-yellow") },
+                        cs.label)
+                    : React.createElement("span", { className: "badge badge-gray" }, "No cycle")
+                ),
+                /* Body */
+                React.createElement("div", { className: "peptide-card-body" },
+                  cs.phase !== "none"
+                    ? React.createElement(React.Fragment, null,
+                        React.createElement("div", { className: "peptide-stat-row" },
+                          React.createElement("span", { className: "peptide-stat-label" }, "Schedule"),
+                          React.createElement("span", { className: "peptide-stat-value" },
+                            p.cycleOnDays + "d ON / " + p.cycleOffDays + "d OFF")
+                        ),
+                        React.createElement("div", { className: "peptide-stat-row" },
+                          React.createElement("span", { className: "peptide-stat-label" }, "Phase progress"),
+                          React.createElement("span", { className: "peptide-stat-value" },
+                            cs.dayInPhase + " / " + cs.totalPhase + " days")
+                        ),
+                        React.createElement("div", { className: "progress-track",
+                          style: { marginTop: "var(--space-2)" } },
+                          React.createElement("div", {
+                            className: "progress-fill",
+                            style: {
+                              width: Math.round((cs.dayInPhase / cs.totalPhase) * 100) + "%",
+                              background: isOn ? "var(--color-success)" : "var(--color-warning)"
+                            }
+                          })
+                        )
+                      )
+                    : React.createElement("p", {
+                        style: { fontSize: "var(--text-xs)", color: "var(--color-text-faint)" }
+                      }, "Click Edit to set an ON/OFF cycle for this peptide.")
+                ),
+                /* Footer */
+                React.createElement("div", { className: "peptide-card-footer" },
+                  cs.phase !== "none" && React.createElement("button",
+                    { className: "btn btn-sm btn-ghost",
+                      onClick: function() { handleClear(p); } },
+                    React.createElement(Icon, { name: "x", size: 13 }), " Clear"
+                  ),
+                  React.createElement("button",
+                    { className: "btn btn-sm btn-primary",
+                      onClick: function() { openEdit(p); } },
+                    React.createElement(Icon, { name: "edit", size: 13 }), " Edit Cycle"
+                  )
+                )
+              );
+            })),
+
+      /* Edit modal */
+      editing && React.createElement(
+        "div", { className: "modal-backdrop",
+          onClick: function(e) { if (e.target === e.currentTarget) setEditing(null); } },
+        React.createElement("div", { className: "modal modal-sm" },
+          React.createElement("div", { className: "modal-header" },
+            React.createElement("h2", { className: "modal-title" }, "Cycle — " + editing.name),
+            React.createElement("button", { className: "btn btn-icon btn-ghost",
+              onClick: function() { setEditing(null); },
+              "aria-label": "Close" },
+              React.createElement(Icon, { name: "x", size: 16 }))
+          ),
+          React.createElement("div", { className: "modal-body" },
+            React.createElement("div", { className: "form-row" },
+              React.createElement("div", { className: "form-group" },
+                React.createElement("label", { className: "form-label" }, "ON days *"),
+                React.createElement("input", { className: "form-input", type: "number",
+                  min: "1", step: "1", placeholder: "5",
+                  value: form.cycleOnDays,
+                  onChange: function(e) {
+                    setForm(function(f) { return Object.assign({}, f, { cycleOnDays: e.target.value }); });
+                  }})
+              ),
+              React.createElement("div", { className: "form-group" },
+                React.createElement("label", { className: "form-label" }, "OFF days *"),
+                React.createElement("input", { className: "form-input", type: "number",
+                  min: "1", step: "1", placeholder: "2",
+                  value: form.cycleOffDays,
+                  onChange: function(e) {
+                    setForm(function(f) { return Object.assign({}, f, { cycleOffDays: e.target.value }); });
+                  }})
+              )
+            ),
+            React.createElement("div", { className: "form-group" },
+              React.createElement("label", { className: "form-label" }, "Cycle start date"),
+              React.createElement("input", { className: "form-input", type: "date",
+                value: form.cycleStartDate,
+                onChange: function(e) {
+                  setForm(function(f) { return Object.assign({}, f, { cycleStartDate: e.target.value }); });
+                }})
+            ),
+            /* Preview */
+            form.cycleOnDays && form.cycleOffDays && React.createElement(
+              "div", { className: "form-calc-hint" },
+              React.createElement("span", null,
+                "📅 " + form.cycleOnDays + "d ON / " + form.cycleOffDays + "d OFF"),
+              React.createElement("span", null,
+                "🔄 " + (parseInt(form.cycleOnDays) + parseInt(form.cycleOffDays)) + "-day cycle")
+            )
+          ),
+          React.createElement("div", { className: "modal-footer" },
+            React.createElement("button", { className: "btn btn-ghost",
+              onClick: function() { setEditing(null); }, disabled: saving }, "Cancel"),
+            React.createElement("button", { className: "btn btn-primary",
+              onClick: handleSave, disabled: saving },
+              saving
+                ? React.createElement(React.Fragment, null,
+                    React.createElement(Icon, { name: "loader", size: 14, className: "spin" }), " Saving…")
+                : "Save Cycle")
+          )
+        )
+      )
+    );
+  }
+
+  if (!window.PT_Pages) window.PT_Pages = {};
+  window.PT_Pages.CyclePage = CyclePage;
+})();
+
+
+/* ==== FEATURE: Usage Charts ==== */
+/* ============================================================
+   FEATURE: Usage / Trend Chart Page
+   Uses Chart.js (loaded from CDN in index.html)
+   window.PT_Pages.ChartPage
+   ============================================================ */
+(function() {
+  var useState  = React.useState;
+  var useEffect = React.useEffect;
+  var useRef    = React.useRef;
+  var Icon      = window.PT_Icons.Icon;
+  var U         = window.PT_UTILS;
+  var API       = window.PT_API;
+
+  /* ── Chart component ─────────────────────────────────────── */
+  function UsageChart(props) {
+    var logs    = props.logs;      /* sorted oldest→newest */
+    var peptide = props.peptide;
+    var canvasRef = useRef(null);
+    var chartRef  = useRef(null);
+
+    useEffect(function() {
+      if (!canvasRef.current || !logs.length) return;
+      if (typeof Chart === "undefined") return;
+
+      /* Build data: remaining after each dose (reverse-engineer from current remaining) */
+      var remaining = parseFloat(peptide.remainingMg) || 0;
+      var points    = [];
+
+      /* Walk logs newest→oldest to build remaining values */
+      for (var i = logs.length - 1; i >= 0; i--) {
+        points.unshift({
+          x: new Date(logs[i].timestamp),
+          y: parseFloat(remaining.toFixed(2)),
+          dose: parseFloat(logs[i].doseMg)
+        });
+        remaining += parseFloat(logs[i].doseMg); /* add back to go backwards */
+      }
+      /* Add current point */
+      points.push({
+        x: new Date(),
+        y: parseFloat(peptide.remainingMg),
+        dose: 0
+      });
+
+      var isDark = document.documentElement.getAttribute("data-theme") === "dark";
+      var textColor   = isDark ? "#cdccca" : "#28251d";
+      var gridColor   = isDark ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.06)";
+      var lineColor   = "var(--color-primary)";
+      var pointColor  = "#01696f";
+
+      if (chartRef.current) { chartRef.current.destroy(); }
+
+      chartRef.current = new Chart(canvasRef.current, {
+        type: "line",
+        data: {
+          datasets: [
+            {
+              label: "Remaining (mg)",
+              data: points.map(function(p) { return { x: p.x, y: p.y }; }),
+              borderColor: pointColor,
+              backgroundColor: "rgba(1,105,111,0.08)",
+              borderWidth: 2,
+              pointRadius: 4,
+              pointHoverRadius: 6,
+              fill: true,
+              tension: 0.3,
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return " " + ctx.parsed.y.toFixed(2) + "mg remaining";
+                }
+              }
+            }
+          },
+          scales: {
+            x: {
+              type: "time",
+              time: { unit: "day", displayFormats: { day: "MMM d" } },
+              ticks: { color: textColor, maxTicksLimit: 10 },
+              grid:  { color: gridColor }
+            },
+            y: {
+              min: 0,
+              ticks: {
+                color: textColor,
+                callback: function(v) { return v + "mg"; }
+              },
+              grid: { color: gridColor }
+            }
+          }
+        }
+      });
+
+      return function() {
+        if (chartRef.current) { chartRef.current.destroy(); chartRef.current = null; }
+      };
+    }, [logs, peptide]);
+
+    if (!logs.length) {
+      return React.createElement("div", { className: "empty-state", style: { padding: "var(--space-12)" } },
+        React.createElement(Icon, { name: "history", size: 32,
+          style: { color: "var(--color-text-faint)", marginBottom: "var(--space-2)" } }),
+        React.createElement("p", null, "No dose history yet for this peptide.")
+      );
+    }
+
+    return React.createElement(
+      "div", { style: { position: "relative", height: 300, width: "100%" } },
+      React.createElement("canvas", { ref: canvasRef })
+    );
+  }
+
+  /* ── ChartPage ───────────────────────────────────────────── */
+  function ChartPage(props) {
+    var addToast     = props.addToast;
+    var pepState     = useState([]);
+    var peptides     = pepState[0]; var setPeptides = pepState[1];
+    var selState     = useState(null);
+    var selected     = selState[0]; var setSelected  = selState[1];
+    var logsState    = useState([]);
+    var logs         = logsState[0]; var setLogs      = logsState[1];
+    var loadingPState = useState(true);
+    var loadingP      = loadingPState[0]; var setLoadingP = loadingPState[1];
+    var loadingLState = useState(false);
+    var loadingL      = loadingLState[0]; var setLoadingL = loadingLState[1];
+    var windowState  = useState(90);
+    var dayWindow    = windowState[0]; var setDayWindow = windowState[1];
+
+    /* Check Chart.js available */
+    var hasChart = typeof Chart !== "undefined";
+
+    useEffect(function() {
+      API.getPeptides()
+        .then(function(d) {
+          var list = d.peptides || [];
+          setPeptides(list);
+          if (list.length > 0) setSelected(list[0]);
+          setLoadingP(false);
+        })
+        .catch(function(e) { addToast(e.message, "error"); setLoadingP(false); });
+    }, []);
+
+    useEffect(function() {
+      if (!selected) return;
+      setLoadingL(true);
+      var cutoff  = new Date();
+      cutoff.setDate(cutoff.getDate() - dayWindow);
+      API.getLogs({ peptideId: selected.id, limit: 500 })
+        .then(function(d) {
+          var all = (d.logs || []).filter(function(l) {
+            return new Date(l.timestamp) >= cutoff;
+          });
+          /* Sort oldest first for chart */
+          all.sort(function(a, b) { return new Date(a.timestamp) - new Date(b.timestamp); });
+          setLogs(all);
+          setLoadingL(false);
+        })
+        .catch(function(e) { addToast(e.message, "error"); setLoadingL(false); });
+    }, [selected, dayWindow]);
+
+    /* Stats from logs */
+    var totalDoses   = logs.length;
+    var totalMg      = logs.reduce(function(s, l) { return s + parseFloat(l.doseMg); }, 0);
+    var avgDose      = totalDoses > 0 ? totalMg / totalDoses : 0;
+    var uniqueDoses  = logs.map(function(l) { return parseFloat(l.doseMg); })
+                          .filter(function(v, i, a) { return a.indexOf(v) === i; })
+                          .sort(function(a, b) { return a - b; });
+
+    return React.createElement(
+      "div", { className: "page-content" },
+      React.createElement("h2", { className: "section-title" }, "Usage Trends"),
+
+      !hasChart && React.createElement(
+        "div", { className: "countdown-banner countdown-due" },
+        React.createElement(Icon, { name: "alert", size: 14, style: { flexShrink: 0 } }),
+        "Chart.js not loaded — check your internet connection and refresh."
+      ),
+
+      /* Controls */
+      React.createElement(
+        "div", { style: { display: "flex", gap: "var(--space-3)", flexWrap: "wrap",
+                          alignItems: "center", marginBottom: "var(--space-5)" } },
+        React.createElement(
+          "select", {
+            className: "form-input", style: { width: "auto" },
+            value: selected ? selected.id : "",
+            onChange: function(e) {
+              var p = peptides.find(function(x) { return x.id === e.target.value; });
+              if (p) setSelected(p);
+            },
+            disabled: loadingP
+          },
+          loadingP
+            ? React.createElement("option", null, "Loading…")
+            : peptides.map(function(p) {
+                return React.createElement("option", { key: p.id, value: p.id }, p.name);
+              })
+        ),
+        [30, 60, 90].map(function(d) {
+          return React.createElement("button", {
+            key: d,
+            className: "btn btn-sm " + (dayWindow === d ? "btn-primary" : "btn-ghost"),
+            onClick: function() { setDayWindow(d); }
+          }, d + "d");
+        })
+      ),
+
+      /* KPI row */
+      selected && React.createElement(
+        "div", { className: "kpi-row", style: { gridTemplateColumns: "repeat(3,1fr)",
+                                                  marginBottom: "var(--space-5)" } },
+        React.createElement("div", { className: "kpi-card" },
+          React.createElement("div", { className: "kpi-label" }, "Doses logged"),
+          React.createElement("div", { className: "kpi-value" }, loadingL ? "—" : totalDoses)
+        ),
+        React.createElement("div", { className: "kpi-card" },
+          React.createElement("div", { className: "kpi-label" }, "Total mg used"),
+          React.createElement("div", { className: "kpi-value" },
+            loadingL ? "—" : totalMg.toFixed(2) + "mg")
+        ),
+        React.createElement("div", { className: "kpi-card" },
+          React.createElement("div", { className: "kpi-label" }, "Avg dose"),
+          React.createElement("div", { className: "kpi-value" },
+            loadingL ? "—" : avgDose.toFixed(2) + "mg")
+        )
+      ),
+
+      /* Chart card */
+      selected && React.createElement(
+        "div", { className: "settings-card", style: { marginBottom: "var(--space-4)" } },
+        React.createElement("h3", { className: "settings-card-title" },
+          React.createElement(Icon, { name: "droplet", size: 14 }),
+          " " + (selected ? selected.name : "") + " — Supply over time"
+        ),
+        loadingL
+          ? React.createElement("div", { className: "skeleton",
+              style: { height: 300, borderRadius: "var(--radius-lg)" } })
+          : React.createElement(UsageChart, { logs: logs, peptide: selected })
+      ),
+
+      /* Dose history table (compact) */
+      selected && !loadingL && logs.length > 0 && React.createElement(
+        "div", { className: "settings-card" },
+        React.createElement("h3", { className: "settings-card-title" },
+          React.createElement(Icon, { name: "history", size: 14 }),
+          " Dose log — last " + dayWindow + " days"
+        ),
+        uniqueDoses.length > 1 && React.createElement(
+          "div", { className: "countdown-banner countdown-ok",
+                   style: { marginBottom: "var(--space-3)" } },
+          React.createElement(Icon, { name: "info", size: 14, style: { flexShrink: 0 } }),
+          "Dose has been adjusted " + (uniqueDoses.length - 1) + " time" +
+          (uniqueDoses.length > 2 ? "s" : "") + " in this window: " +
+          uniqueDoses.map(function(d) { return d + "mg"; }).join(" → ")
+        ),
+        React.createElement("div", { className: "table-wrap" },
+          React.createElement("table", null,
+            React.createElement("thead", null,
+              React.createElement("tr", null,
+                React.createElement("th", null, "Date"),
+                React.createElement("th", null, "Dose"),
+                React.createElement("th", null, "Notes")
+              )
+            ),
+            React.createElement("tbody", null,
+              logs.slice().reverse().slice(0, 20).map(function(l) {
+                return React.createElement("tr", { key: l.logId },
+                  React.createElement("td", {
+                    style: { color: "var(--color-text-muted)", fontSize: "var(--text-xs)",
+                             whiteSpace: "nowrap" } },
+                    U.formatDateTime(l.timestamp)),
+                  React.createElement("td", null,
+                    React.createElement("span", { className: "badge badge-blue mono" },
+                      parseFloat(l.doseMg).toFixed(2) + "mg")),
+                  React.createElement("td", {
+                    style: { color: "var(--color-text-faint)", fontSize: "var(--text-xs)" } },
+                    l.notes || "—")
+                );
+              })
+            )
+          )
+        )
+      )
+    );
+  }
+
+  if (!window.PT_Pages) window.PT_Pages = {};
+  window.PT_Pages.ChartPage = ChartPage;
+})();
+
+
+/* ==== FEATURE: PIN Profiles ==== */
+/* ============================================================
+   FEATURE: PIN-Protected Profiles
+   Shows a profile selector / PIN screen before loading the app.
+   Profiles stored in window.PT_PROFILES (set in index.html).
+   window.PT_ProfileGate  — the gate component
+   ============================================================ */
+(function() {
+  var useState   = React.useState;
+  var useEffect  = React.useEffect;
+  var Icon       = window.PT_Icons.Icon;
+
+  /* Simple djb2 hash — NOT cryptographic, just casual PIN privacy */
+  function hashPin(pin) {
+    var h = 5381;
+    for (var i = 0; i < pin.length; i++) {
+      h = ((h << 5) + h) + pin.charCodeAt(i);
+      h = h & h; /* 32-bit int */
+    }
+    return String(h >>> 0);
+  }
+
+  /* ── ProfileCard ─────────────────────────────────────────── */
+  function ProfileCard(props) {
+    var profile  = props.profile;
+    var onSelect = props.onSelect;
+
+    /* Avatar initials */
+    var initials = profile.name.split(" ").map(function(w) { return w[0]; }).join("").toUpperCase().slice(0,2);
+
+    return React.createElement(
+      "button",
+      { className: "profile-card", onClick: function() { onSelect(profile); } },
+      React.createElement("div", { className: "profile-avatar" }, initials),
+      React.createElement("div", { className: "profile-name" }, profile.name),
+      profile.pin
+        ? React.createElement("div", { className: "profile-lock" },
+            React.createElement(Icon, { name: "settings", size: 12 }), " PIN protected")
+        : React.createElement("div", { className: "profile-lock" }, "No PIN")
+    );
+  }
+
+  /* ── PinEntry ────────────────────────────────────────────── */
+  function PinEntry(props) {
+    var profile  = props.profile;
+    var onUnlock = props.onUnlock;
+    var onBack   = props.onBack;
+
+    var pinState   = useState("");
+    var pin        = pinState[0]; var setPin = pinState[1];
+    var errState   = useState(false);
+    var hasErr     = errState[0]; var setHasErr = errState[1];
+
+    function handleSubmit() {
+      if (hashPin(pin) === profile.pin) {
+        onUnlock(profile);
+      } else {
+        setHasErr(true);
+        setPin("");
+        setTimeout(function() { setHasErr(false); }, 1200);
+      }
+    }
+
+    function handleKey(e) {
+      if (e.key === "Enter") handleSubmit();
+    }
+
+    /* Auto-submit when 4 digits entered */
+    useEffect(function() {
+      if (pin.length === 4) handleSubmit();
+    }, [pin]);
+
+    var initials = profile.name.split(" ").map(function(w) { return w[0]; }).join("").toUpperCase().slice(0,2);
+
+    return React.createElement(
+      "div", { className: "pin-entry" },
+      React.createElement("div", { className: "profile-avatar profile-avatar-lg" }, initials),
+      React.createElement("h3", { className: "pin-profile-name" }, profile.name),
+      React.createElement("p", { className: "pin-label" }, "Enter your 4-digit PIN"),
+      React.createElement(
+        "div", { className: "pin-dots" },
+        [0,1,2,3].map(function(i) {
+          return React.createElement("div", {
+            key: i,
+            className: "pin-dot" + (pin.length > i ? " filled" : "") + (hasErr ? " error" : "")
+          });
+        })
+      ),
+      React.createElement("input", {
+        type: "tel", inputMode: "numeric", pattern: "[0-9]*",
+        maxLength: 4, value: pin, autoFocus: true,
+        className: "pin-hidden-input",
+        onChange: function(e) {
+          var v = e.target.value.replace(/\D/g, "").slice(0,4);
+          setPin(v);
+        },
+        onKeyDown: handleKey,
+        "aria-label": "PIN entry"
+      }),
+      hasErr && React.createElement("p", { className: "pin-error" }, "Incorrect PIN"),
+      React.createElement("button", {
+        className: "btn btn-ghost btn-sm",
+        style: { marginTop: "var(--space-4)" },
+        onClick: onBack
+      }, React.createElement(Icon, { name: "chevron-right",
+        style: { transform: "rotate(180deg)" }, size: 14 }),
+        " Back")
+    );
+  }
+
+  /* ── ProfileGate ─────────────────────────────────────────── */
+  function ProfileGate(props) {
+    var onUnlock    = props.onUnlock;   /* called with profile when access granted */
+    var profiles    = window.PT_PROFILES || [];
+
+    var stageState  = useState("select");  /* "select" | "pin" */
+    var stage       = stageState[0]; var setStage = stageState[1];
+    var selState    = useState(null);
+    var selected    = selState[0]; var setSelected = selState[1];
+
+    /* If only one profile and no PIN, auto-unlock */
+    useEffect(function() {
+      if (profiles.length === 1 && !profiles[0].pin) {
+        onUnlock(profiles[0]);
+      }
+    }, []);
+
+    function handleSelect(profile) {
+      if (!profile.pin) {
+        onUnlock(profile);
+      } else {
+        setSelected(profile);
+        setStage("pin");
+      }
+    }
+
+    if (profiles.length === 0) {
+      /* No profiles configured — pass through */
+      onUnlock({ name: "Default", sheetSuffix: "" });
+      return null;
+    }
+
+    return React.createElement(
+      "div", { className: "profile-gate" },
+      React.createElement(
+        "div", { className: "profile-gate-inner" },
+        /* Logo */
+        React.createElement(
+          "div", { className: "profile-gate-logo" },
+          React.createElement("svg", {
+            width: 36, height: 36, viewBox: "0 0 24 24", fill: "none",
+            stroke: "var(--color-primary)", strokeWidth: "2", strokeLinecap: "round", strokeLinejoin: "round"
+          },
+            React.createElement("path", { d: "m18 2 4 4" }),
+            React.createElement("path", { d: "m17 7 3-3" }),
+            React.createElement("path", { d: "M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5" }),
+            React.createElement("path", { d: "m9 11 4 4" }),
+            React.createElement("path", { d: "m5 19-3 3" }),
+            React.createElement("path", { d: "m14 4 6 6" })
+          ),
+          React.createElement("span", { className: "profile-gate-title" }, "PeptideTrack")
+        ),
+
+        stage === "select"
+          ? React.createElement(React.Fragment, null,
+              React.createElement("p", { className: "profile-gate-sub" }, "Who's tracking today?"),
+              React.createElement(
+                "div", { className: "profile-grid" },
+                profiles.map(function(p) {
+                  return React.createElement(ProfileCard, {
+                    key: p.name, profile: p, onSelect: handleSelect
+                  });
+                })
+              )
+            )
+          : React.createElement(PinEntry, {
+              profile:  selected,
+              onUnlock: onUnlock,
+              onBack:   function() { setStage("select"); setSelected(null); }
+            })
+      )
+    );
+  }
+
+  window.PT_ProfileGate = ProfileGate;
+})();
+
+/* ============================================================
+   APP ROOT — v2 with Calc, Cycles, Charts, Profiles
+   ============================================================ */
+(function() {
+  var useState  = React.useState;
+  var useEffect = React.useEffect;
   var Icon      = window.PT_Icons.Icon;
   var ToastContainer = window.PT_Toast.ToastContainer;
   var useToasts      = window.PT_Toast.useToasts;
@@ -3366,16 +4561,53 @@ tbody tr:last-child td { border-bottom: none; }
   var SchedulePage   = window.PT_Pages.SchedulePage;
   var HistoryPage    = window.PT_Pages.HistoryPage;
   var SettingsPage   = window.PT_Pages.SettingsPage;
+  var CalcPage       = window.PT_Pages.CalcPage;
+  var CyclePage      = window.PT_Pages.CyclePage;
+  var ChartPage      = window.PT_Pages.ChartPage;
+  var ProfileGate    = window.PT_ProfileGate;
   var U              = window.PT_UTILS;
 
   var PAGE_TITLES = {
     dashboard: "Dashboard",
     schedule:  "Schedule",
     history:   "Dose History",
+    calc:      "Reconstitution Calculator",
+    cycles:    "Cycle Tracking",
+    charts:    "Usage Trends",
     settings:  "Settings",
   };
 
+  /* ── Root App ──────────────────────────────────────────── */
   function App() {
+    var profileState  = useState(null);
+    var activeProfile = profileState[0]; var setActiveProfile = profileState[1];
+
+    /* If no profiles defined, skip gate */
+    var profiles = window.PT_PROFILES || [];
+
+    function handleUnlock(profile) {
+      /* Append sheetSuffix to API calls via global */
+      if (profile.sheetSuffix) {
+        window.PT_SHEET_SUFFIX = profile.sheetSuffix;
+      }
+      setActiveProfile(profile);
+    }
+
+    if (profiles.length > 0 && !activeProfile) {
+      return React.createElement(ProfileGate, { onUnlock: handleUnlock });
+    }
+
+    return React.createElement(AppShell, {
+      profile:          activeProfile,
+      onSwitchProfile:  profiles.length > 1 ? function() { setActiveProfile(null); } : null,
+    });
+  }
+
+  /* ── AppShell ──────────────────────────────────────────── */
+  function AppShell(props) {
+    var profile         = props.profile;
+    var onSwitchProfile = props.onSwitchProfile;
+
     var pageState    = useState("dashboard");
     var page         = pageState[0]; var setPage = pageState[1];
     var menuState    = useState(false);
@@ -3391,24 +4623,18 @@ tbody tr:last-child td { border-bottom: none; }
     var toasts     = toastPack.toasts;
     var addToast   = toastPack.addToast;
 
-    /* Theme toggle */
     function toggleTheme() {
       var next = theme === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
       setTheme(next);
     }
 
-    /* Mobile menu */
     function handleNav(id) { setPage(id); setMenuOpen(false); }
 
-    /* Overdue count for badge */
     var overdueCountState = useState(0);
     var overdueCount      = overdueCountState[0];
-    var setOverdueCount   = overdueCountState[1];
 
-    /* Refresh ref (Dashboard wires itself in) */
     var refreshRef = { current: null };
-
     function handleRefresh() {
       if (refreshRef.current) {
         setLoading(true);
@@ -3417,37 +4643,29 @@ tbody tr:last-child td { border-bottom: none; }
       }
     }
 
-    /* Page component */
     var pageEl = null;
-    if (page === "dashboard") {
-      pageEl = React.createElement(DashboardPage, {
-        addToast:     addToast,
-        onRefreshRef: refreshRef,
-      });
-    } else if (page === "schedule") {
-      pageEl = React.createElement(SchedulePage, { addToast: addToast });
-    } else if (page === "history") {
-      pageEl = React.createElement(HistoryPage, { addToast: addToast });
-    } else if (page === "settings") {
-      pageEl = React.createElement(SettingsPage, { addToast: addToast });
-    }
+    if      (page === "dashboard") pageEl = React.createElement(DashboardPage, { addToast: addToast, onRefreshRef: refreshRef });
+    else if (page === "schedule")  pageEl = React.createElement(SchedulePage,  { addToast: addToast });
+    else if (page === "history")   pageEl = React.createElement(HistoryPage,   { addToast: addToast });
+    else if (page === "calc")      pageEl = React.createElement(CalcPage,      { addToast: addToast });
+    else if (page === "cycles")    pageEl = React.createElement(CyclePage,     { addToast: addToast });
+    else if (page === "charts")    pageEl = React.createElement(ChartPage,     { addToast: addToast });
+    else if (page === "settings")  pageEl = React.createElement(SettingsPage,  { addToast: addToast });
 
     return React.createElement(
       "div", { className: "app-shell" },
-
-      /* Sidebar */
       React.createElement(Sidebar, {
-        page:         page,
-        onNav:        handleNav,
-        isOpen:       menuOpen,
-        overdueCount: overdueCount,
+        page:             page,
+        onNav:            handleNav,
+        isOpen:           menuOpen,
+        overdueCount:     overdueCount,
+        profile:          profile,
+        onSwitchProfile:  onSwitchProfile,
       }),
       React.createElement(MobileOverlay, {
         isOpen:  menuOpen,
         onClose: function() { setMenuOpen(false); },
       }),
-
-      /* Main */
       React.createElement(
         "div", { className: "main-area" },
         React.createElement(Topbar, {
@@ -3461,15 +4679,12 @@ tbody tr:last-child td { border-bottom: none; }
         }),
         React.createElement("div", { className: "main-scroll" }, pageEl)
       ),
-
-      /* Toast container */
       React.createElement(ToastContainer, { toasts: toasts })
     );
   }
 
   window.PT_APP = App;
 
-  /* ── Bootstrap ───────────────────────────────────────────── */
   var root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(React.createElement(App));
 })();
