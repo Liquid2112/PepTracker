@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeptideTrack</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root, [data-theme="light"] {
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+
+      --text-xs:   clamp(0.75rem,  0.7rem  + 0.25vw, 0.875rem);
+      --text-sm:   clamp(0.875rem, 0.8rem  + 0.35vw, 1rem);
+      --text-base: clamp(1rem,     0.95rem + 0.25vw, 1.125rem);
+      --text-lg:   clamp(1.125rem, 1rem    + 0.75vw, 1.5rem);
+      --text-xl:   clamp(1.5rem,   1.2rem  + 1.25vw, 2.25rem);
+
+      --space-1: 0.25rem; --space-2: 0.5rem;  --space-3: 0.75rem;
+      --space-4: 1rem;    --space-5: 1.25rem; --space-6: 1.5rem;
+      --space-8: 2rem;    --space-10: 2.5rem; --space-12: 3rem;
+      --space-16: 4rem;
+
+      --color-bg:              #f0f4ff;
+      --color-surface:         #ffffff;
+      --color-surface-2:       #f8faff;
+      --color-surface-offset:  #eef2fb;
+      --color-border:          rgba(37,99,235,0.12);
+      --color-divider:         rgba(37,99,235,0.08);
+
+      --color-text:            #0f172a;
+      --color-text-muted:      #475569;
+      --color-text-faint:      #94a3b8;
+      --color-text-inverse:    #ffffff;
+
+      --color-primary:         #1d4ed8;
+      --color-primary-hover:   #1e40af;
+      --color-primary-active:  #1e3a8a;
+      --color-primary-light:   #dbeafe;
+      --color-primary-faint:   #eff6ff;
+
+      --color-success:         #16a34a;
+      --color-success-light:   #dcfce7;
+      --color-warning:         #d97706;
+      --color-warning-light:   #fef3c7;
+      --color-error:           #dc2626;
+      --color-error-light:     #fee2e2;
+      --color-info:            #0284c7;
+      --color-info-light:      #e0f2fe;
+
+      --radius-sm: 0.375rem; --radius-md: 0.5rem;
+      --radius-lg: 0.75rem;  --radius-xl: 1rem;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 1px 3px rgba(30,64,175,0.06), 0 1px 2px rgba(30,64,175,0.04);
+      --shadow-md: 0 4px 12px rgba(30,64,175,0.08), 0 2px 4px rgba(30,64,175,0.05);
+      --shadow-lg: 0 12px 32px rgba(30,64,175,0.12), 0 4px 8px rgba(30,64,175,0.06);
+
+      --sidebar-w: 240px;
+      --header-h: 60px;
+      --transition: 180ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    [data-theme="dark"] {
+      --color-bg:              #0a0f1e;
+      --color-surface:         #0f172a;
+      --color-surface-2:       #1e293b;
+      --color-surface-offset:  #1a2540;
+      --color-border:          rgba(96,165,250,0.12);
+      --color-divider:         rgba(96,165,250,0.07);
+      --color-text:            #e2e8f0;
+      --color-text-muted:      #94a3b8;
+      --color-text-faint:      #475569;
+      --color-text-inverse:    #0f172a;
+      --color-primary:         #3b82f6;
+      --color-primary-hover:   #60a5fa;
+      --color-primary-active:  #93c5fd;
+      --color-primary-light:   #1e3a5f;
+      --color-primary-faint:   #172040;
+      --color-success:         #4ade80;
+      --color-success-light:   #14532d;
+      --color-warning:         #fbbf24;
+      --color-warning-light:   #451a03;
+      --color-error:           #f87171;
+      --color-error-light:     #450a0a;
+      --color-info:            #38bdf8;
+      --color-info-light:      #0c1a2e;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg: 0 12px 32px rgba(0,0,0,0.5);
+    }
+
+    /* ── RESET ───────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; scroll-behavior: smooth; }
+    body { font-family: var(--font-body); font-size: var(--text-base); color: var(--color-text); background: var(--color-bg); min-height: 100dvh; }
+    img, svg { display: block; }
+    button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+    input, select, textarea { font: inherit; color: inherit; }
+    ::selection { background: rgba(29,78,216,0.15); }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: var(--radius-sm); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    /* ── LAYOUT ──────────────────────────────────────────────── */
+    #root { display: flex; min-height: 100dvh; }
+
+    .sidebar {
+      width: var(--sidebar-w);
+      background: var(--color-surface);
+      border-right: 1px solid var(--color-border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0; left: 0; bottom: 0;
+      z-index: 100;
+      transition: transform var(--transition);
+    }
+    .sidebar-logo {
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 0 var(--space-5);
+      border-bottom: 1px solid var(--color-divider);
+      flex-shrink: 0;
+    }
+    .sidebar-logo-mark {
+      width: 32px; height: 32px;
+      background: var(--color-primary);
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .sidebar-logo-text { font-weight: 700; font-size: var(--text-sm); letter-spacing: -0.01em; color: var(--color-text); }
+    .sidebar-logo-text span { color: var(--color-primary); }
+
+    .sidebar-nav { padding: var(--space-4) var(--space-3); flex: 1; overflow-y: auto; }
+    .nav-section-label {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--color-text-faint);
+      padding: var(--space-4) var(--space-3) var(--space-2);
+    }
+    .nav-item {
+      display: flex; align-items: center; gap: var(--space-3);
+      padding: var(--space-2) var(--space-3);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm); font-weight: 500;
+      color: var(--color-text-muted);
+      cursor: pointer;
+      transition: background var(--transition), color var(--transition);
+      margin-bottom: 2px;
+      border: none; background: none; width: 100%; text-align: left;
+    }
+    .nav-item:hover { background: var(--color-surface-offset); color: var(--color-text); }
+    .nav-item.active { background: var(--color-primary-faint); color: var(--color-primary); font-weight: 600; }
+    .nav-item svg { flex-shrink: 0; opacity: 0.7; }
+    .nav-item.active svg { opacity: 1; }
+
+    .sidebar-footer {
+      padding: var(--space-4);
+      border-top: 1px solid var(--color-divider);
+    }
+
+    .main-area {
+      margin-left: var(--sidebar-w);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100dvh;
+      min-width: 0;
+    }
+    .topbar {
+      height: var(--header-h);
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--space-6);
+      position: sticky; top: 0; z-index: 50;
+    }
+    .topbar-title { font-size: var(--text-lg); font-weight: 700; letter-spacing: -0.02em; }
+    .topbar-actions { display: flex; align-items: center; gap: var(--space-3); }
+
+    .page-content { padding: var(--space-6); flex: 1; max-width: 1280px; margin: 0 auto; width: 100%; }
+
+    /* ── CARDS ───────────────────────────────────────────────── */
+    .card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+    }
+    .card-header {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--color-divider);
+      display: flex; align-items: center; justify-content: space-between;
+      gap: var(--space-3);
+    }
+    .card-title { font-size: var(--text-base); font-weight: 700; }
+    .card-body { padding: var(--space-5) var(--space-6); }
+
+    /* ── BUTTONS ─────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: var(--space-2);
+      padding: var(--space-2) var(--space-4);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm); font-weight: 600;
+      transition: background var(--transition), color var(--transition), box-shadow var(--transition), transform var(--transition);
+      white-space: nowrap;
+    }
+    .btn:active { transform: translateY(1px); }
+    .btn-primary { background: var(--color-primary); color: #fff; }
+    .btn-primary:hover { background: var(--color-primary-hover); box-shadow: var(--shadow-md); }
+    .btn-secondary { background: var(--color-primary-faint); color: var(--color-primary); border: 1px solid var(--color-primary-light); }
+    .btn-secondary:hover { background: var(--color-primary-light); }
+    .btn-ghost { background: transparent; color: var(--color-text-muted); }
+    .btn-ghost:hover { background: var(--color-surface-offset); color: var(--color-text); }
+    .btn-danger { background: var(--color-error-light); color: var(--color-error); }
+    .btn-danger:hover { background: var(--color-error); color: #fff; }
+    .btn-sm { padding: var(--space-1) var(--space-3); font-size: var(--text-xs); }
+    .btn-icon { padding: var(--space-2); border-radius: var(--radius-md); aspect-ratio: 1; }
+
+    /* ── BADGES ──────────────────────────────────────────────── */
+    .badge {
+      display: inline-flex; align-items: center; gap: var(--space-1);
+      padding: 2px var(--space-2);
+      border-radius: var(--radius-full);
+      font-size: 0.7rem; font-weight: 600;
+    }
+    .badge-blue   { background: var(--color-primary-light); color: var(--color-primary); }
+    .badge-green  { background: var(--color-success-light); color: var(--color-success); }
+    .badge-yellow { background: var(--color-warning-light); color: var(--color-warning); }
+    .badge-red    { background: var(--color-error-light);   color: var(--color-error); }
+    .badge-gray   { background: var(--color-surface-offset); color: var(--color-text-muted); }
+
+    /* ── FORM ELEMENTS ───────────────────────────────────────── */
+    .form-group { display: flex; flex-direction: column; gap: var(--space-1); }
+    .form-label { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      padding: var(--space-2) var(--space-3);
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      font-size: var(--text-sm); color: var(--color-text);
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+    .form-input::placeholder { color: var(--color-text-faint); }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(29,78,216,0.1);
+    }
+    .form-select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 2rem; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4); }
+    .form-error { font-size: var(--text-xs); color: var(--color-error); }
+    .form-hint  { font-size: var(--text-xs); color: var(--color-text-faint); }
+
+    /* ── PROGRESS BAR ────────────────────────────────────────── */
+    .progress-track {
+      height: 6px; background: var(--color-surface-offset);
+      border-radius: var(--radius-full); overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: var(--radius-full);
+      transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* ── MODAL ───────────────────────────────────────────────── */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4); backdrop-filter: blur(4px);
+      z-index: 200; display: flex; align-items: center; justify-content: center;
+      padding: var(--space-4);
+      animation: fadeIn 0.15s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-lg);
+      width: 100%; max-width: 520px;
+      max-height: 90dvh; overflow-y: auto;
+      animation: slideUp 0.2s cubic-bezier(0.16,1,0.3,1);
+    }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header {
+      padding: var(--space-5) var(--space-6);
+      border-bottom: 1px solid var(--color-divider);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .modal-title { font-size: var(--text-base); font-weight: 700; }
+    .modal-body { padding: var(--space-5) var(--space-6); display: flex; flex-direction: column; gap: var(--space-4); }
+    .modal-footer {
+      padding: var(--space-4) var(--space-6);
+      border-top: 1px solid var(--color-divider);
+      display: flex; justify-content: flex-end; gap: var(--space-3);
+    }
+
+    /* ── TOAST ───────────────────────────────────────────────── */
+    .toast-container { position: fixed; bottom: var(--space-6); right: var(--space-6); z-index: 300; display: flex; flex-direction: column; gap: var(--space-2); }
+    .toast {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      padding: var(--space-3) var(--space-4);
+      display: flex; align-items: center; gap: var(--space-3);
+      font-size: var(--text-sm); min-width: 280px;
+      animation: toastIn 0.25s cubic-bezier(0.16,1,0.3,1);
+    }
+    @keyframes toastIn { from { opacity:0; transform: translateX(20px); } to { opacity:1; transform: translateX(0); } }
+    .toast-success { border-left: 3px solid var(--color-success); }
+    .toast-error   { border-left: 3px solid var(--color-error); }
+    .toast-info    { border-left: 3px solid var(--color-primary); }
+
+    /* ── PEPTIDE CARD ─────────────────────────────────────────── */
+    .peptide-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px,100%), 1fr)); gap: var(--space-5); }
+    .peptide-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+    .peptide-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+    .peptide-card-header {
+      padding: var(--space-4) var(--space-5);
+      background: var(--color-primary-faint);
+      display: flex; align-items: flex-start; justify-content: space-between;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .peptide-card-name { font-size: var(--text-base); font-weight: 700; }
+    .peptide-card-body { padding: var(--space-4) var(--space-5); display: flex; flex-direction: column; gap: var(--space-3); }
+    .peptide-stat-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); }
+    .peptide-stat-label { font-size: var(--text-xs); color: var(--color-text-muted); font-weight: 500; }
+    .peptide-stat-value { font-size: var(--text-sm); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .peptide-card-footer {
+      padding: var(--space-3) var(--space-5);
+      border-top: 1px solid var(--color-divider);
+      display: flex; gap: var(--space-2); justify-content: flex-end;
+    }
+
+    /* ── COUNTDOWN / NEXT DOSE ───────────────────────────────── */
+    .countdown-banner {
+      padding: var(--space-3) var(--space-5);
+      display: flex; align-items: center; gap: var(--space-3);
+      font-size: var(--text-xs); font-weight: 600;
+      border-radius: var(--radius-lg);
+    }
+    .countdown-due    { background: var(--color-error-light); color: var(--color-error); }
+    .countdown-soon   { background: var(--color-warning-light); color: var(--color-warning); }
+    .countdown-ok     { background: var(--color-success-light); color: var(--color-success); }
+    .countdown-none   { background: var(--color-surface-offset); color: var(--color-text-muted); }
+
+    /* ── TABLE ───────────────────────────────────────────────── */
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    thead th {
+      text-align: left; padding: var(--space-3) var(--space-4);
+      font-size: var(--text-xs); font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.05em; color: var(--color-text-muted);
+      border-bottom: 2px solid var(--color-border);
+      background: var(--color-surface-2);
+    }
+    tbody td {
+      padding: var(--space-3) var(--space-4);
+      border-bottom: 1px solid var(--color-divider);
+      font-variant-numeric: tabular-nums;
+    }
+    tbody tr:hover { background: var(--color-surface-offset); }
+    tbody tr:last-child td { border-bottom: none; }
+
+    /* ── KPI CARDS ───────────────────────────────────────────── */
+    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: var(--space-4); }
+    .kpi-card {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-sm);
+    }
+    .kpi-label { font-size: var(--text-xs); font-weight: 600; color: var(--color-text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: var(--space-2); }
+    .kpi-value { font-size: var(--text-xl); font-weight: 700; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+    .kpi-sub   { font-size: var(--text-xs); color: var(--color-text-faint); margin-top: var(--space-1); }
+
+    /* ── EMPTY STATE ─────────────────────────────────────────── */
+    .empty-state { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: var(--space-16) var(--space-8); text-align: center; color: var(--color-text-muted); gap: var(--space-4); }
+    .empty-state-icon { color: var(--color-text-faint); }
+    .empty-state h3 { font-size: var(--text-base); font-weight: 700; color: var(--color-text); }
+    .empty-state p { font-size: var(--text-sm); max-width: 32ch; }
+
+    /* ── SKELETON ────────────────────────────────────────────── */
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    .skeleton {
+      background: linear-gradient(90deg, var(--color-surface-offset) 25%, var(--color-surface-2) 50%, var(--color-surface-offset) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s ease-in-out infinite;
+      border-radius: var(--radius-sm);
+    }
+
+    /* ── THEME TOGGLE ────────────────────────────────────────── */
+    .theme-toggle {
+      width: 36px; height: 36px;
+      border-radius: var(--radius-md);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--color-surface-offset);
+      color: var(--color-text-muted);
+      border: 1px solid var(--color-border);
+      transition: background var(--transition), color var(--transition);
+    }
+    .theme-toggle:hover { background: var(--color-primary-faint); color: var(--color-primary); }
+
+    /* ── SETUP BANNER ────────────────────────────────────────── */
+    .setup-banner {
+      background: var(--color-warning-light);
+      border: 1px solid var(--color-warning);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4) var(--space-5);
+      display: flex; align-items: flex-start; gap: var(--space-3);
+      font-size: var(--text-sm); color: var(--color-warning);
+      margin-bottom: var(--space-6);
+    }
+
+    /* ── RESPONSIVE ──────────────────────────────────────────── */
+    .mobile-menu-btn { display: none; }
+    @media (max-width: 768px) {
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); }
+      .main-area { margin-left: 0; }
+      .mobile-menu-btn { display: flex; }
+      .form-row, .form-row-3 { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+      .page-content { padding: var(--space-4); }
+    }
+    .mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 90; }
+    @media (max-width: 768px) { .mobile-overlay.show { display: block; } }
+
+    /* ── MISC ────────────────────────────────────────────────── */
+    .separator { height: 1px; background: var(--color-divider); margin: var(--space-2) 0; }
+    .text-muted { color: var(--color-text-muted); }
+    .text-faint { color: var(--color-text-faint); }
+    .mono { font-family: var(--font-mono); font-size: 0.9em; }
+    .flex-center { display: flex; align-items: center; justify-content: center; }
+    .gap-2 { gap: var(--space-2); }
+    .gap-3 { gap: var(--space-3); }
+    .w-full { width: 100%; }
+    .section-gap { display: flex; flex-direction: column; gap: var(--space-6); }
+    .inline-flex { display: inline-flex; align-items: center; }
+    .spin { animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+<div id="root"></div>
+
+<script type="text/babel">
+// ============================================================
+// CONFIGURATION — paste your Apps Script /exec URL here
+// ============================================================
+const SCRIPT_URL = "YOUR_APPS_SCRIPT_URL_HERE";
+
+// ── Helpers ──────────────────────────────────────────────────
+const { useState, useEffect, useCallback, useRef, useMemo } = React;
+
+async function api(action, params = {}) {
+  const url = new URL(SCRIPT_URL);
+  url.searchParams.set("action", action);
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== "") url.searchParams.set(k, v);
+  });
+  const res = await fetch(url.toString());
+  const data = await res.json();
+  if (!data.success) throw new Error(data.error || "API error");
+  return data;
+}
+
+function formatDate(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+function formatDateTime(iso) {
+  if (!iso) return "—";
+  return new Date(iso).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+}
+function daysFromNow(iso) {
+  if (!iso) return null;
+  return (new Date(iso) - new Date()) / 86400000;
+}
+function addDays(iso, days) {
+  const d = new Date(iso);
+  d.setDate(d.getDate() + days);
+  return d.toISOString();
+}
+function nextDoseDate(peptide) {
+  if (!peptide.lastDose) return null;
+  return addDays(peptide.lastDose, peptide.frequencyDays);
+}
+function daysUntilNextDose(peptide) {
+  const next = nextDoseDate(peptide);
+  if (!next) return null;
+  return daysFromNow(next);
+}
+function dosesLeft(peptide) {
+  if (!peptide.doseMg || peptide.doseMg === 0) return 0;
+  return Math.floor(parseFloat(peptide.remainingMg) / parseFloat(peptide.doseMg));
+}
+function daysSupplyLeft(peptide) {
+  return dosesLeft(peptide) * parseFloat(peptide.frequencyDays);
+}
+function pctRemaining(peptide) {
+  if (!peptide.vialMg || peptide.vialMg === 0) return 0;
+  return Math.min(100, Math.max(0, (parseFloat(peptide.remainingMg) / parseFloat(peptide.vialMg)) * 100));
+}
+
+// ── SVG Icons ─────────────────────────────────────────────────
+const Icon = ({ name, size=16, ...props }) => {
+  const icons = {
+    home: <><rect x="3" y="9" width="18" height="13" rx="2"/><path d="M3 9l9-6 9 6"/></>,
+    flask: <><path d="M10 2v7.31"/><path d="M14 2v7.31"/><path d="M8.5 10h7"/><path d="M5.44 18.38A9 9 0 0 0 12 21a9 9 0 0 0 6.57-2.62L12 10z"/><path d="M8.5 10L5.44 18.38"/><path d="M15.5 10l3.06 8.38"/></>,
+    plus: <><path d="M12 5v14M5 12h14"/></>,
+    edit: <><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></>,
+    trash: <><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></>,
+    check: <><polyline points="20 6 9 12 4 10"/></>,
+    x: <><path d="M18 6 6 18M6 6l12 12"/></>,
+    syringe: <><path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/></>,
+    calendar: <><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></>,
+    history: <><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l4 2"/></>,
+    settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></>,
+    alert: <><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></>,
+    sun: <><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></>,
+    moon: <><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></>,
+    loader: <><path d="M21 12a9 9 0 1 1-6.219-8.56"/></>,
+    menu: <><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></>,
+    info: <><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></>,
+    link: <><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></>,
+    download: <><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></>,
+    droplet: <><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" {...props}>
+      {icons[name]}
+    </svg>
+  );
+};
+
+// ── Toast System ──────────────────────────────────────────────
+function useToasts() {
+  const [toasts, setToasts] = useState([]);
+  const addToast = useCallback((msg, type = "info") => {
+    const id = Date.now();
+    setToasts(t => [...t, { id, msg, type }]);
+    setTimeout(() => setToasts(t => t.filter(x => x.id !== id)), 3500);
+  }, []);
+  return { toasts, addToast };
+}
+
+function ToastContainer({ toasts }) {
+  return (
+    <div className="toast-container" role="alert" aria-live="polite">
+      {toasts.map(t => (
+        <div key={t.id} className={`toast toast-${t.type}`}>
+          <Icon name={t.type === "success" ? "check" : t.type === "error" ? "x" : "info"} size={16}
+            color={t.type === "success" ? "var(--color-success)" : t.type === "error" ? "var(--color-error)" : "var(--color-primary)"} />
+          <span>{t.msg}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── Countdown badge ───────────────────────────────────────────
+function NextDoseBadge({ peptide }) {
+  const days = daysUntilNextDose(peptide);
+  if (days === null) return <span className="badge badge-gray">No dose logged</span>;
+  if (days < 0)    return <span className="badge badge-red">Overdue {Math.abs(Math.round(days))}d</span>;
+  if (days < 0.5)  return <span className="badge badge-red">Due today</span>;
+  if (days < 1)    return <span className="badge badge-yellow">Due tomorrow</span>;
+  return <span className="badge badge-green">In {Math.round(days)}d</span>;
+}
+
+function DoseCountdown({ peptide }) {
+  const days = daysUntilNextDose(peptide);
+  if (days === null) return (
+    <div className="countdown-banner countdown-none">
+      <Icon name="calendar" size={14} /> No dose logged yet — log your first dose below
+    </div>
+  );
+  if (days < 0) return (
+    <div className="countdown-banner countdown-due">
+      <Icon name="alert" size={14} /> Overdue by {Math.abs(Math.round(days))} day{Math.abs(Math.round(days)) !== 1 ? "s" : ""} — take your dose
+    </div>
+  );
+  if (days < 1) return (
+    <div className="countdown-banner countdown-soon">
+      <Icon name="alert" size={14} /> Dose due {days < 0.5 ? "today" : "tomorrow"} — {new Date(nextDoseDate(peptide)).toLocaleTimeString("en-US", {hour:"numeric",minute:"2-digit"})}
+    </div>
+  );
+  return (
+    <div className="countdown-banner countdown-ok">
+      <Icon name="calendar" size={14} /> Next dose in {Math.round(days)} day{Math.round(days) !== 1 ? "s" : ""} — {formatDate(nextDoseDate(peptide))}
+    </div>
+  );
+}
+
+// ── Add/Edit Peptide Modal ─────────────────────────────────────
+function PeptideModal({ peptide, onSave, onClose, addToast }) {
+  const isEdit = !!peptide;
+  const [form, setForm] = useState({
+    name: peptide?.name || "",
+    vialMg: peptide?.vialMg || "",
+    doseMg: peptide?.doseMg || "",
+    frequencyDays: peptide?.frequencyDays || "",
+    remainingMg: peptide?.remainingMg || "",
+    lastDose: peptide?.lastDose ? peptide.lastDose.split("T")[0] : "",
+    notes: peptide?.notes || "",
+  });
+  const [errors, setErrors] = useState({});
+  const [saving, setSaving] = useState(false);
+
+  const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
+
+  const validate = () => {
+    const e = {};
+    if (!form.name.trim()) e.name = "Name is required";
+    if (!form.vialMg || isNaN(form.vialMg) || +form.vialMg <= 0) e.vialMg = "Enter a valid mg amount";
+    if (!form.doseMg || isNaN(form.doseMg) || +form.doseMg <= 0) e.doseMg = "Enter a valid dose";
+    if (!form.frequencyDays || isNaN(form.frequencyDays) || +form.frequencyDays <= 0) e.frequencyDays = "Enter frequency in days";
+    if (form.remainingMg !== "" && (isNaN(form.remainingMg) || +form.remainingMg < 0)) e.remainingMg = "Must be ≥ 0";
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
+    setSaving(true);
+    try {
+      const payload = {
+        name: form.name.trim(),
+        vialMg: form.vialMg,
+        doseMg: form.doseMg,
+        frequencyDays: form.frequencyDays,
+        remainingMg: form.remainingMg !== "" ? form.remainingMg : form.vialMg,
+        lastDose: form.lastDose ? new Date(form.lastDose + "T12:00:00").toISOString() : "",
+        notes: form.notes.trim(),
+      };
+      if (isEdit) {
+        await api("updatePeptide", { id: peptide.id, ...payload });
+        addToast("Peptide updated", "success");
+      } else {
+        await api("addPeptide", payload);
+        addToast("Peptide added", "success");
+      }
+      onSave();
+      onClose();
+    } catch (err) {
+      addToast(err.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+        <div className="modal-header">
+          <h2 className="modal-title" id="modal-title">{isEdit ? "Edit Peptide" : "Add Peptide"}</h2>
+          <button className="btn btn-icon btn-ghost" onClick={onClose} aria-label="Close"><Icon name="x" size={16}/></button>
+        </div>
+        <div className="modal-body">
+          <div className="form-group">
+            <label className="form-label">Peptide Name *</label>
+            <input className="form-input" placeholder="e.g. BPC-157, TB-500, GHK-Cu" value={form.name} onChange={e => set("name", e.target.value)} />
+            {errors.name && <span className="form-error">{errors.name}</span>}
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Vial Size (mg) *</label>
+              <input className="form-input" type="number" min="0" step="0.1" placeholder="5" value={form.vialMg} onChange={e => set("vialMg", e.target.value)} />
+              {errors.vialMg && <span className="form-error">{errors.vialMg}</span>}
+            </div>
+            <div className="form-group">
+              <label className="form-label">Dose Per Injection (mg) *</label>
+              <input className="form-input" type="number" min="0" step="0.01" placeholder="0.25" value={form.doseMg} onChange={e => set("doseMg", e.target.value)} />
+              {errors.doseMg && <span className="form-error">{errors.doseMg}</span>}
+            </div>
+          </div>
+
+          <div className="form-row">
+            <div className="form-group">
+              <label className="form-label">Frequency (every N days) *</label>
+              <input className="form-input" type="number" min="1" step="0.5" placeholder="3" value={form.frequencyDays} onChange={e => set("frequencyDays", e.target.value)} />
+              {errors.frequencyDays && <span className="form-error">{errors.frequencyDays}</span>}
+              <span className="form-hint">e.g. 1 = daily, 3 = every 3 days</span>
+            </div>
+            <div className="form-group">
+              <label className="form-label">Remaining (mg)</label>
+              <input className="form-input" type="number" min="0" step="0.01" placeholder="Defaults to vial size" value={form.remainingMg} onChange={e => set("remainingMg", e.target.value)} />
+              {errors.remainingMg && <span className="form-error">{errors.remainingMg}</span>}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Last Dose Date</label>
+            <input className="form-input" type="date" value={form.lastDose} onChange={e => set("lastDose", e.target.value)} max={new Date().toISOString().split("T")[0]} />
+            <span className="form-hint">Sets the starting point for your next-dose countdown</span>
+          </div>
+
+          <div className="form-group">
+            <label className="form-label">Notes</label>
+            <textarea className="form-textarea" rows={2} placeholder="Reconstitution notes, source, storage info..." value={form.notes} onChange={e => set("notes", e.target.value)} style={{resize:"vertical"}} />
+          </div>
+
+          {form.vialMg && form.doseMg && form.frequencyDays && (
+            <div style={{background:"var(--color-primary-faint)",borderRadius:"var(--radius-md)",padding:"var(--space-3) var(--space-4)",fontSize:"var(--text-xs)",color:"var(--color-primary)",display:"flex",gap:"var(--space-3)",flexWrap:"wrap"}}>
+              <span>💉 {Math.floor(form.vialMg / form.doseMg)} total doses</span>
+              <span>📅 {Math.round(Math.floor(form.vialMg / form.doseMg) * form.frequencyDays)} day supply</span>
+            </div>
+          )}
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleSubmit} disabled={saving}>
+            {saving ? <><Icon name="loader" size={14} className="spin" /> Saving…</> : (isEdit ? "Save Changes" : "Add Peptide")}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Log Dose Modal ────────────────────────────────────────────
+function LogDoseModal({ peptide, onSave, onClose, addToast }) {
+  const [doseMg, setDoseMg] = useState(peptide.doseMg || "");
+  const [notes, setNotes] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  const handleLog = async () => {
+    if (!doseMg || isNaN(doseMg) || +doseMg <= 0) { addToast("Enter a valid dose amount", "error"); return; }
+    setSaving(true);
+    try {
+      await api("logDose", { peptideId: peptide.id, peptideName: peptide.name, doseMg, notes });
+      addToast(`Dose of ${doseMg}mg logged for ${peptide.name}`, "success");
+      onSave();
+      onClose();
+    } catch (err) {
+      addToast(err.message, "error");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal" role="dialog" aria-modal="true" aria-labelledby="log-modal-title">
+        <div className="modal-header">
+          <h2 className="modal-title" id="log-modal-title">Log Dose — {peptide.name}</h2>
+          <button className="btn btn-icon btn-ghost" onClick={onClose} aria-label="Close"><Icon name="x" size={16}/></button>
+        </div>
+        <div className="modal-body">
+          <DoseCountdown peptide={peptide} />
+          <div className="form-group">
+            <label className="form-label">Dose Amount (mg)</label>
+            <input className="form-input" type="number" min="0" step="0.01" value={doseMg} onChange={e => setDoseMg(e.target.value)} placeholder={peptide.doseMg} />
+            <span className="form-hint">Standard dose: {peptide.doseMg}mg</span>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Notes (optional)</label>
+            <input className="form-input" value={notes} onChange={e => setNotes(e.target.value)} placeholder="Site, reconstituted batch, etc." />
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"var(--space-3)"}}>
+            <div className="kpi-card" style={{padding:"var(--space-3)"}}>
+              <div className="kpi-label">Current Remaining</div>
+              <div className="kpi-value" style={{fontSize:"var(--text-lg)"}}>{parseFloat(peptide.remainingMg).toFixed(2)}mg</div>
+            </div>
+            <div className="kpi-card" style={{padding:"var(--space-3)"}}>
+              <div className="kpi-label">After This Dose</div>
+              <div className="kpi-value" style={{fontSize:"var(--text-lg)",color: Math.max(0, parseFloat(peptide.remainingMg) - parseFloat(doseMg || 0)) < parseFloat(peptide.doseMg) ? "var(--color-error)" : "var(--color-success)"}}>
+                {Math.max(0, parseFloat(peptide.remainingMg) - parseFloat(doseMg || 0)).toFixed(2)}mg
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-primary" onClick={handleLog} disabled={saving}>
+            {saving ? <><Icon name="loader" size={14} className="spin" /> Logging…</> : "Log Dose ✓"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Delete Confirm Modal ──────────────────────────────────────
+function DeleteModal({ peptide, onSave, onClose, addToast }) {
+  const [deleting, setDeleting] = useState(false);
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await api("deletePeptide", { id: peptide.id });
+      addToast(`${peptide.name} removed`, "success");
+      onSave();
+      onClose();
+    } catch(err) { addToast(err.message, "error"); setDeleting(false); }
+  };
+  return (
+    <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal" style={{maxWidth:380}} role="dialog" aria-modal="true">
+        <div className="modal-header"><h2 className="modal-title">Remove Peptide?</h2><button className="btn btn-icon btn-ghost" onClick={onClose} aria-label="Close"><Icon name="x" size={16}/></button></div>
+        <div className="modal-body">
+          <p style={{fontSize:"var(--text-sm)",color:"var(--color-text-muted)"}}>This will remove <strong>{peptide.name}</strong> from your tracker. Your dose history will be preserved in the spreadsheet.</p>
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
+          <button className="btn btn-danger" onClick={handleDelete} disabled={deleting}>{deleting ? "Removing…" : "Remove"}</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Peptide Card ──────────────────────────────────────────────
+function PeptideCard({ peptide, onEdit, onDelete, onLog, onViewHistory }) {
+  const pct = pctRemaining(peptide);
+  const fillColor = pct > 40 ? "var(--color-primary)" : pct > 15 ? "var(--color-warning)" : "var(--color-error)";
+  const left = dosesLeft(peptide);
+  const supplyDays = daysSupplyLeft(peptide);
+
+  return (
+    <article className="peptide-card">
+      <div className="peptide-card-header">
+        <div>
+          <div className="peptide-card-name">{peptide.name}</div>
+          {peptide.notes && <div style={{fontSize:"var(--text-xs)",color:"var(--color-text-muted)",marginTop:"2px"}}>{peptide.notes}</div>}
+        </div>
+        <NextDoseBadge peptide={peptide} />
+      </div>
+      <div className="peptide-card-body">
+        {/* Progress bar */}
+        <div>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:"var(--space-1)"}}>
+            <span style={{fontSize:"var(--text-xs)",color:"var(--color-text-muted)",fontWeight:600}}>Remaining</span>
+            <span style={{fontSize:"var(--text-xs)",fontWeight:700,fontVariantNumeric:"tabular-nums",color:fillColor}}>{parseFloat(peptide.remainingMg).toFixed(2)}mg / {parseFloat(peptide.vialMg).toFixed(1)}mg</span>
+          </div>
+          <div className="progress-track">
+            <div className="progress-fill" style={{width:`${pct}%`, background:fillColor}} />
+          </div>
+          <div style={{fontSize:"var(--text-xs)",color:"var(--color-text-faint)",marginTop:"var(--space-1)"}}>{pct.toFixed(0)}% remaining</div>
+        </div>
+
+        <div className="separator" />
+
+        <div className="peptide-stat-row">
+          <span className="peptide-stat-label">Dose</span>
+          <span className="peptide-stat-value">{peptide.doseMg}mg</span>
+        </div>
+        <div className="peptide-stat-row">
+          <span className="peptide-stat-label">Frequency</span>
+          <span className="peptide-stat-value">Every {peptide.frequencyDays} day{peptide.frequencyDays != 1 ? "s" : ""}</span>
+        </div>
+        <div className="peptide-stat-row">
+          <span className="peptide-stat-label">Doses Left</span>
+          <span className="peptide-stat-value" style={{color: left <= 3 ? "var(--color-error)" : "inherit"}}>{left} dose{left !== 1 ? "s" : ""}</span>
+        </div>
+        <div className="peptide-stat-row">
+          <span className="peptide-stat-label">Supply Left</span>
+          <span className="peptide-stat-value" style={{color: supplyDays <= 7 ? "var(--color-warning)" : "inherit"}}>{supplyDays} days</span>
+        </div>
+        <div className="peptide-stat-row">
+          <span className="peptide-stat-label">Last Dose</span>
+          <span className="peptide-stat-value" style={{color:"var(--color-text-muted)"}}>{formatDate(peptide.lastDose)}</span>
+        </div>
+        <div className="peptide-stat-row">
+          <span className="peptide-stat-label">Next Dose</span>
+          <span className="peptide-stat-value" style={{color:"var(--color-primary)"}}>{nextDoseDate(peptide) ? formatDate(nextDoseDate(peptide)) : "—"}</span>
+        </div>
+      </div>
+      <div className="peptide-card-footer">
+        <button className="btn btn-sm btn-ghost" onClick={() => onViewHistory(peptide)} aria-label="View history" title="Dose history"><Icon name="history" size={13}/></button>
+        <button className="btn btn-sm btn-ghost" onClick={() => onEdit(peptide)} aria-label="Edit" title="Edit"><Icon name="edit" size={13}/></button>
+        <button className="btn btn-sm btn-ghost" onClick={() => onDelete(peptide)} aria-label="Delete" title="Remove" style={{color:"var(--color-error)"}}><Icon name="trash" size={13}/></button>
+        <button className="btn btn-sm btn-primary" onClick={() => onLog(peptide)}><Icon name="syringe" size={13}/> Log Dose</button>
+      </div>
+    </article>
+  );
+}
+
+// ── History Modal ─────────────────────────────────────────────
+function HistoryModal({ peptide, onClose }) {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    api("getLogs", { peptideId: peptide.id, limit: 50 })
+      .then(d => { setLogs(d.logs); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, [peptide.id]);
+
+  return (
+    <div className="modal-backdrop" onClick={e => e.target === e.currentTarget && onClose()}>
+      <div className="modal" style={{maxWidth:560}} role="dialog" aria-modal="true">
+        <div className="modal-header">
+          <h2 className="modal-title">Dose History — {peptide.name}</h2>
+          <button className="btn btn-icon btn-ghost" onClick={onClose} aria-label="Close"><Icon name="x" size={16}/></button>
+        </div>
+        <div style={{padding:"var(--space-4) var(--space-6)"}}>
+          {loading ? (
+            <div style={{display:"flex",flexDirection:"column",gap:"var(--space-2)"}}>
+              {[1,2,3].map(i=><div key={i} className="skeleton" style={{height:40,borderRadius:"var(--radius-md)"}}/>)}
+            </div>
+          ) : logs.length === 0 ? (
+            <div className="empty-state" style={{padding:"var(--space-10)"}}>
+              <Icon name="syringe" size={32} className="empty-state-icon"/>
+              <h3>No doses logged yet</h3>
+              <p>Use the Log Dose button to record your first dose.</p>
+            </div>
+          ) : (
+            <div className="table-wrap">
+              <table>
+                <thead><tr><th>Date & Time</th><th>Dose</th><th>Notes</th></tr></thead>
+                <tbody>
+                  {logs.map(l => (
+                    <tr key={l.logId}>
+                      <td style={{color:"var(--color-text-muted)"}}>{formatDateTime(l.timestamp)}</td>
+                      <td><span className="mono">{parseFloat(l.doseMg).toFixed(2)}mg</span></td>
+                      <td style={{color:"var(--color-text-faint)",fontSize:"var(--text-xs)"}}>{l.notes || "—"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-ghost" onClick={onClose}>Close</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Schedule View ─────────────────────────────────────────────
+function ScheduleView({ peptides }) {
+  const schedule = useMemo(() => {
+    const days = [];
+    const today = new Date();
+    today.setHours(0,0,0,0);
+
+    for (let d = 0; d < 28; d++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() + d);
+      const duePeptides = peptides.filter(p => {
+        const next = nextDoseDate(p);
+        if (!next) return false;
+        const nextDate = new Date(next);
+        nextDate.setHours(0,0,0,0);
+        const diff = Math.round((nextDate - date) / 86400000);
+        if (diff < 0) return false;
+        if (diff === 0) return true;
+        return diff % parseFloat(p.frequencyDays) === 0;
+      });
+      days.push({ date, duePeptides });
+    }
+    return days;
+  }, [peptides]);
+
+  const overdue = peptides.filter(p => { const d = daysUntilNextDose(p); return d !== null && d < 0; });
+
+  return (
+    <div className="section-gap">
+      {overdue.length > 0 && (
+        <div>
+          <h3 style={{fontSize:"var(--text-base)",fontWeight:700,marginBottom:"var(--space-3)"}}>⚠️ Overdue</h3>
+          <div style={{display:"flex",flexDirection:"column",gap:"var(--space-2)"}}>
+            {overdue.map(p => (
+              <div key={p.id} className="card" style={{padding:"var(--space-3) var(--space-5)",display:"flex",alignItems:"center",justifyContent:"space-between",borderColor:"var(--color-error)"}}>
+                <div>
+                  <span style={{fontWeight:700}}>{p.name}</span>
+                  <span style={{fontSize:"var(--text-xs)",color:"var(--color-error)",marginLeft:"var(--space-3)"}}>Overdue by {Math.abs(Math.round(daysUntilNextDose(p)))} day{Math.abs(Math.round(daysUntilNextDose(p)))!==1?"s":""}</span>
+                </div>
+                <span style={{fontSize:"var(--text-xs)",color:"var(--color-text-muted)"}}>{p.doseMg}mg</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <div>
+        <h3 style={{fontSize:"var(--text-base)",fontWeight:700,marginBottom:"var(--space-3)"}}>28-Day Schedule</h3>
+        <div style={{display:"flex",flexDirection:"column",gap:"var(--space-2)"}}>
+          {schedule.filter(d => d.duePeptides.length > 0).map(({ date, duePeptides }) => {
+            const isToday = date.toDateString() === new Date().toDateString();
+            return (
+              <div key={date.toISOString()} className="card" style={{padding:"var(--space-3) var(--space-5)",display:"flex",alignItems:"center",gap:"var(--space-5)",borderColor:isToday?"var(--color-primary)":""}}>
+                <div style={{minWidth:64,textAlign:"center"}}>
+                  <div style={{fontSize:"var(--text-xs)",color:"var(--color-text-faint)",fontWeight:600,textTransform:"uppercase"}}>{date.toLocaleDateString("en-US",{weekday:"short"})}</div>
+                  <div style={{fontSize:"var(--text-lg)",fontWeight:700,lineHeight:1.1,color:isToday?"var(--color-primary)":"var(--color-text)"}}>{date.getDate()}</div>
+                  <div style={{fontSize:"var(--text-xs)",color:"var(--color-text-faint)"}}>{date.toLocaleDateString("en-US",{month:"short"})}</div>
+                </div>
+                {isToday && <div style={{width:3,height:40,background:"var(--color-primary)",borderRadius:"var(--radius-full)",flexShrink:0}}/>}
+                <div style={{display:"flex",flexWrap:"wrap",gap:"var(--space-2)",flex:1}}>
+                  {duePeptides.map(p => (
+                    <div key={p.id} style={{display:"flex",alignItems:"center",gap:"var(--space-2)",background:"var(--color-primary-faint)",color:"var(--color-primary)",borderRadius:"var(--radius-full)",padding:"2px var(--space-3)",fontSize:"var(--text-xs)",fontWeight:600}}>
+                      <Icon name="droplet" size={10}/> {p.name} <span style={{opacity:0.7}}>{p.doseMg}mg</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+          {schedule.filter(d => d.duePeptides.length > 0).length === 0 && (
+            <div className="empty-state" style={{padding:"var(--space-10)"}}>
+              <Icon name="calendar" size={32} className="empty-state-icon"/>
+              <h3>No scheduled doses</h3>
+              <p>Add peptides with a last dose date to see your schedule.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Log History Page ──────────────────────────────────────────
+function LogHistory({ peptides }) {
+  const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState("");
+
+  useEffect(() => {
+    api("getLogs", { limit: 200 })
+      .then(d => { setLogs(d.logs); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const filtered = useMemo(() => {
+    if (!filter) return logs;
+    return logs.filter(l => l.peptideName?.toLowerCase().includes(filter.toLowerCase()));
+  }, [logs, filter]);
+
+  const exportCSV = () => {
+    const header = "Date,Peptide,Dose (mg),Notes";
+    const rows = logs.map(l => `"${formatDateTime(l.timestamp)}","${l.peptideName}","${l.doseMg}","${l.notes || ""}"`);
+    const blob = new Blob([[header, ...rows].join("\n")], { type: "text/csv" });
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "peptide-log.csv"; a.click();
+  };
+
+  return (
+    <div className="section-gap">
+      <div className="card">
+        <div className="card-header">
+          <h2 className="card-title">All Dose Logs</h2>
+          <div style={{display:"flex",gap:"var(--space-3)",alignItems:"center"}}>
+            <input className="form-input" style={{width:200}} placeholder="Filter by peptide…" value={filter} onChange={e=>setFilter(e.target.value)}/>
+            <button className="btn btn-secondary btn-sm" onClick={exportCSV}><Icon name="download" size={13}/> Export CSV</button>
+          </div>
+        </div>
+        <div className="table-wrap">
+          {loading ? (
+            <div style={{padding:"var(--space-6)",display:"flex",flexDirection:"column",gap:"var(--space-2)"}}>
+              {[1,2,3,4,5].map(i=><div key={i} className="skeleton" style={{height:40}}/>)}
+            </div>
+          ) : filtered.length === 0 ? (
+            <div className="empty-state">
+              <Icon name="history" size={32} className="empty-state-icon"/>
+              <h3>No logs yet</h3>
+              <p>Log your first dose from the Dashboard to see history here.</p>
+            </div>
+          ) : (
+            <table>
+              <thead><tr><th>Date & Time</th><th>Peptide</th><th>Dose</th><th>Notes</th></tr></thead>
+              <tbody>
+                {filtered.map(l=>(
+                  <tr key={l.logId}>
+                    <td style={{color:"var(--color-text-muted)",whiteSpace:"nowrap"}}>{formatDateTime(l.timestamp)}</td>
+                    <td style={{fontWeight:600}}>{l.peptideName}</td>
+                    <td><span className="mono badge badge-blue">{parseFloat(l.doseMg).toFixed(2)}mg</span></td>
+                    <td style={{color:"var(--color-text-faint)",fontSize:"var(--text-xs)"}}>{l.notes||"—"}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Settings Page ─────────────────────────────────────────────
+function SettingsPage({ scriptUrl, setScriptUrl }) {
+  const [url, setUrl] = useState(scriptUrl);
+  const [testing, setTesting] = useState(false);
+  const [testResult, setTestResult] = useState(null);
+
+  const testConnection = async () => {
+    setTesting(true); setTestResult(null);
+    try {
+      const u = new URL(url);
+      u.searchParams.set("action","ping");
+      const res = await fetch(u.toString());
+      const data = await res.json();
+      setTestResult(data.success ? "success" : "error");
+    } catch {
+      setTestResult("error");
+    } finally { setTesting(false); }
+  };
+
+  const save = () => { setScriptUrl(url); };
+
+  return (
+    <div className="section-gap" style={{maxWidth:600}}>
+      <div className="card">
+        <div className="card-header"><h2 className="card-title">Backend Connection</h2></div>
+        <div className="card-body" style={{display:"flex",flexDirection:"column",gap:"var(--space-5)"}}>
+          <div className="form-group">
+            <label className="form-label">Apps Script Web App URL</label>
+            <input className="form-input" value={url} onChange={e=>setUrl(e.target.value)} placeholder="https://script.google.com/macros/s/.../exec" style={{fontFamily:"var(--font-mono)",fontSize:"0.8rem"}}/>
+            <span className="form-hint">Deploy your Code.gs as a Web App and paste the /exec URL here</span>
+          </div>
+          {testResult === "success" && <div className="countdown-banner countdown-ok"><Icon name="check" size={14}/> Connection successful!</div>}
+          {testResult === "error"   && <div className="countdown-banner countdown-due"><Icon name="x" size={14}/> Connection failed — check your URL and deployment settings</div>}
+          <div style={{display:"flex",gap:"var(--space-3)"}}>
+            <button className="btn btn-secondary" onClick={testConnection} disabled={testing || !url}>
+              {testing ? <><Icon name="loader" size={14} className="spin"/> Testing…</> : "Test Connection"}
+            </button>
+            <button className="btn btn-primary" onClick={save}>Save URL</button>
+          </div>
+        </div>
+      </div>
+
+      <div className="card">
+        <div className="card-header"><h2 className="card-title">Setup Guide</h2></div>
+        <div className="card-body" style={{fontSize:"var(--text-sm)",color:"var(--color-text-muted)",display:"flex",flexDirection:"column",gap:"var(--space-3)"}}>
+          {[
+            ["1", "Create a Google Sheet", "Go to sheets.google.com → New blank spreadsheet"],
+            ["2", "Open Apps Script", "Extensions → Apps Script → paste Code.gs"],
+            ["3", "Deploy as Web App", "Deploy → New Deployment → Web App → Execute as: Me → Anyone"],
+            ["4", "Copy the URL", "Paste the /exec URL into the field above and click Save"],
+          ].map(([n, title, desc]) => (
+            <div key={n} style={{display:"flex",gap:"var(--space-3)",alignItems:"flex-start"}}>
+              <div style={{width:24,height:24,borderRadius:"var(--radius-full)",background:"var(--color-primary-light)",color:"var(--color-primary)",display:"flex",alignItems:"center",justifyContent:"center",fontSize:"var(--text-xs)",fontWeight:700,flexShrink:0}}>{n}</div>
+              <div><div style={{fontWeight:600,color:"var(--color-text)"}}>{title}</div><div style={{fontSize:"var(--text-xs)"}}>{desc}</div></div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Dashboard (Home) ──────────────────────────────────────────
+function Dashboard({ peptides, loading, onAdd, onEdit, onDelete, onLog, onViewHistory, addToast }) {
+  const dueToday = peptides.filter(p => { const d = daysUntilNextDose(p); return d !== null && d <= 0.5; });
+  const dueSoon  = peptides.filter(p => { const d = daysUntilNextDose(p); return d !== null && d > 0.5 && d <= 2; });
+  const lowStock = peptides.filter(p => dosesLeft(p) <= 3);
+  const totalMgLogged = peptides.reduce((s, p) => s + (parseFloat(p.vialMg) - parseFloat(p.remainingMg)), 0);
+
+  return (
+    <div className="section-gap">
+      {/* KPIs */}
+      <div className="kpi-grid">
+        <div className="kpi-card">
+          <div className="kpi-label">Active Peptides</div>
+          <div className="kpi-value" style={{color:"var(--color-primary)"}}>{peptides.length}</div>
+          <div className="kpi-sub">currently tracking</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Due Today / Overdue</div>
+          <div className="kpi-value" style={{color: dueToday.length > 0 ? "var(--color-error)" : "var(--color-success)"}}>{dueToday.length}</div>
+          <div className="kpi-sub">{dueToday.length === 0 ? "all on schedule" : dueToday.map(p=>p.name).join(", ")}</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Due Soon (2d)</div>
+          <div className="kpi-value" style={{color: dueSoon.length > 0 ? "var(--color-warning)" : "var(--color-text)"}}>{dueSoon.length}</div>
+          <div className="kpi-sub">{dueSoon.map(p=>p.name).join(", ") || "nothing upcoming"}</div>
+        </div>
+        <div className="kpi-card">
+          <div className="kpi-label">Low Stock</div>
+          <div className="kpi-value" style={{color: lowStock.length > 0 ? "var(--color-warning)" : "var(--color-text)"}}>{lowStock.length}</div>
+          <div className="kpi-sub">{lowStock.length === 0 ? "all stocked" : "≤3 doses left"}</div>
+        </div>
+      </div>
+
+      {/* Peptide grid */}
+      <div>
+        <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:"var(--space-4)"}}>
+          <h2 style={{fontSize:"var(--text-lg)",fontWeight:700}}>My Peptides</h2>
+          <button className="btn btn-primary" onClick={onAdd}><Icon name="plus" size={15}/> Add Peptide</button>
+        </div>
+
+        {loading ? (
+          <div className="peptide-grid">
+            {[1,2,3].map(i=>(
+              <div key={i} className="card" style={{overflow:"hidden"}}>
+                <div style={{padding:"var(--space-4) var(--space-5)",background:"var(--color-surface-offset)"}}>
+                  <div className="skeleton" style={{height:20,width:"60%"}}/>
+                </div>
+                <div style={{padding:"var(--space-4) var(--space-5)",display:"flex",flexDirection:"column",gap:"var(--space-3)"}}>
+                  {[80,60,70,50,90].map((w,j)=><div key={j} className="skeleton" style={{height:16,width:`${w}%`}}/>)}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : peptides.length === 0 ? (
+          <div className="card">
+            <div className="empty-state">
+              <Icon name="flask" size={40} className="empty-state-icon"/>
+              <h3>No peptides yet</h3>
+              <p>Add your first peptide to start tracking doses and schedules.</p>
+              <button className="btn btn-primary" onClick={onAdd}><Icon name="plus" size={15}/> Add First Peptide</button>
+            </div>
+          </div>
+        ) : (
+          <div className="peptide-grid">
+            {peptides.map(p => (
+              <PeptideCard key={p.id} peptide={p} onEdit={onEdit} onDelete={onDelete} onLog={onLog} onViewHistory={onViewHistory} />
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+// ── Main App ──────────────────────────────────────────────────
+function App() {
+  const [page, setPage] = useState("dashboard");
+  const [peptides, setPeptides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [theme, setTheme] = useState(() => window.matchMedia("(prefers-color-scheme:dark)").matches ? "dark" : "light");
+  const [scriptUrl, setScriptUrl] = useState(SCRIPT_URL);
+
+  // Modals
+  const [addModal, setAddModal] = useState(false);
+  const [editModal, setEditModal] = useState(null);
+  const [deleteModal, setDeleteModal] = useState(null);
+  const [logModal, setLogModal] = useState(null);
+  const [historyModal, setHistoryModal] = useState(null);
+
+  const { toasts, addToast } = useToasts();
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
+
+  const loadPeptides = useCallback(async () => {
+    if (!scriptUrl || scriptUrl === "YOUR_APPS_SCRIPT_URL_HERE") { setLoading(false); return; }
+    setLoading(true);
+    try {
+      const data = await api("getPeptides");
+      setPeptides(data.peptides || []);
+    } catch (err) {
+      addToast("Failed to load peptides: " + err.message, "error");
+    } finally {
+      setLoading(false);
+    }
+  }, [scriptUrl]);
+
+  useEffect(() => { loadPeptides(); }, [loadPeptides]);
+
+  const isNotConfigured = !scriptUrl || scriptUrl === "YOUR_APPS_SCRIPT_URL_HERE";
+
+  const pageTitles = { dashboard: "Dashboard", schedule: "Schedule", history: "History", settings: "Settings" };
+
+  const navItems = [
+    { id: "dashboard", label: "Dashboard", icon: "home" },
+    { id: "schedule",  label: "Schedule",  icon: "calendar" },
+    { id: "history",   label: "Dose History", icon: "history" },
+    { id: "settings",  label: "Settings",  icon: "settings" },
+  ];
+
+  return (
+    <>
+      {/* Mobile overlay */}
+      <div className={`mobile-overlay ${sidebarOpen ? "show" : ""}`} onClick={() => setSidebarOpen(false)} />
+
+      {/* Sidebar */}
+      <nav className={`sidebar ${sidebarOpen ? "open" : ""}`} aria-label="Main navigation">
+        <div className="sidebar-logo">
+          <div className="sidebar-logo-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m18 2 4 4"/><path d="m17 7 3-3"/><path d="M19 9 8.7 19.3c-1 1-2.5 1-3.4 0l-.6-.6c-1-1-1-2.5 0-3.4L15 5"/><path d="m9 11 4 4"/><path d="m5 19-3 3"/><path d="m14 4 6 6"/>
+            </svg>
+          </div>
+          <span className="sidebar-logo-text">Peptide<span>Track</span></span>
+        </div>
+        <div className="sidebar-nav">
+          <div className="nav-section-label">Tracker</div>
+          {navItems.map(item => (
+            <button
+              key={item.id}
+              className={`nav-item ${page === item.id ? "active" : ""}`}
+              onClick={() => { setPage(item.id); setSidebarOpen(false); }}
+            >
+              <Icon name={item.icon} size={16} />
+              {item.label}
+            </button>
+          ))}
+        </div>
+        <div className="sidebar-footer">
+          <div style={{fontSize:"var(--text-xs)",color:"var(--color-text-faint)",textAlign:"center",lineHeight:1.4}}>
+            PeptideTrack v1.0<br/>Backed by Google Sheets
+          </div>
+        </div>
+      </nav>
+
+      {/* Main area */}
+      <div className="main-area">
+        <header className="topbar">
+          <div style={{display:"flex",alignItems:"center",gap:"var(--space-3)"}}>
+            <button className="btn btn-icon btn-ghost mobile-menu-btn" onClick={() => setSidebarOpen(true)} aria-label="Open menu">
+              <Icon name="menu" size={18}/>
+            </button>
+            <h1 className="topbar-title">{pageTitles[page]}</h1>
+          </div>
+          <div className="topbar-actions">
+            {page === "dashboard" && !loading && (
+              <button className="btn btn-sm btn-ghost" onClick={loadPeptides} title="Refresh">
+                <Icon name="loader" size={14}/> Refresh
+              </button>
+            )}
+            <button
+              className="theme-toggle"
+              onClick={() => setTheme(t => t === "dark" ? "light" : "dark")}
+              aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+              data-theme-toggle
+            >
+              <Icon name={theme === "dark" ? "sun" : "moon"} size={15}/>
+            </button>
+          </div>
+        </header>
+
+        <main className="page-content">
+          {isNotConfigured && page !== "settings" && (
+            <div className="setup-banner">
+              <Icon name="alert" size={18} style={{flexShrink:0}}/>
+              <div>
+                <strong>Backend not configured.</strong> Go to <button style={{color:"var(--color-warning)",fontWeight:700,textDecoration:"underline",background:"none",border:"none",cursor:"pointer",font:"inherit"}} onClick={() => setPage("settings")}>Settings</button> and paste your Apps Script URL to connect to Google Sheets.
+              </div>
+            </div>
+          )}
+
+          {page === "dashboard" && (
+            <Dashboard
+              peptides={peptides} loading={loading}
+              onAdd={() => setAddModal(true)}
+              onEdit={p => setEditModal(p)}
+              onDelete={p => setDeleteModal(p)}
+              onLog={p => setLogModal(p)}
+              onViewHistory={p => setHistoryModal(p)}
+              addToast={addToast}
+            />
+          )}
+          {page === "schedule" && <ScheduleView peptides={peptides} />}
+          {page === "history"  && <LogHistory peptides={peptides} />}
+          {page === "settings" && <SettingsPage scriptUrl={scriptUrl} setScriptUrl={url => { setScriptUrl(url); window.__SCRIPT_URL = url; loadPeptides(); }} />}
+        </main>
+      </div>
+
+      {/* Modals */}
+      {addModal    && <PeptideModal onSave={loadPeptides} onClose={() => setAddModal(false)} addToast={addToast} />}
+      {editModal   && <PeptideModal peptide={editModal} onSave={loadPeptides} onClose={() => setEditModal(null)} addToast={addToast} />}
+      {deleteModal && <DeleteModal peptide={deleteModal} onSave={loadPeptides} onClose={() => setDeleteModal(null)} addToast={addToast} />}
+      {logModal    && <LogDoseModal peptide={logModal} onSave={loadPeptides} onClose={() => setLogModal(null)} addToast={addToast} />}
+      {historyModal && <HistoryModal peptide={historyModal} onClose={() => setHistoryModal(null)} />}
+
+      {/* Toasts */}
+      <ToastContainer toasts={toasts} />
+    </>
+  );
+}
+
+// Override SCRIPT_URL at runtime from settings (without page reload)
+const origApi = api;
+function api(action, params = {}) {
+  const url = window.__SCRIPT_URL || SCRIPT_URL;
+  const u = new URL(url);
+  u.searchParams.set("action", action);
+  Object.entries(params).forEach(([k, v]) => {
+    if (v !== undefined && v !== null && v !== "") u.searchParams.set(k, v);
+  });
+  return fetch(u.toString()).then(r => r.json()).then(d => { if (!d.success) throw new Error(d.error || "API error"); return d; });
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
